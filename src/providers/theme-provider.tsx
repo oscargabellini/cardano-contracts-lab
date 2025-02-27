@@ -1,10 +1,11 @@
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { Attribute, ThemeProvider as NextThemesProvider } from "next-themes";
 import { useEffect, useState } from "react";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
   defaultTheme?: string;
   enableSystem?: boolean;
+  attribute?: Attribute;
 };
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {

@@ -1,8 +1,66 @@
-@import "tailwindcss";
+@import url("https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* body {
+  font-family: "Satoshi", sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+} */
+
+body {
+  font-family: "Satoshi", sans-serif;
+  min-height: 100vh; /* assicura che il gradiente copra tutta l'altezza */
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  background-image: radial-gradient(
+      54% 99% at 52% -21%,
+      rgba(100, 149, 237, 0.25) 0%,
+      rgba(135, 206, 250, 0.18) 50%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    radial-gradient(
+      92% 59% at 117% 19%,
+      rgba(65, 105, 225, 0.22) 0%,
+      rgba(176, 196, 222, 0.15) 50%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    radial-gradient(
+      93% 60% at -15% 23%,
+      rgba(70, 130, 180, 0.28) 0%,
+      rgba(135, 206, 235, 0.18) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+}
+
+.dark body {
+  background-image: inherit;
+}
 
 :root {
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
+
+  background-image: radial-gradient(
+      54% 99% at 52% -21%,
+      #e1ecff60 0%,
+      #d7e3ff35 50%,
+      #ffffff00 100%
+    ),
+    radial-gradient(
+      92% 59% at 117% 19%,
+      #d3e2ff40 0%,
+      #dae7ff25 50%,
+      #ffffff00 100%
+    ),
+    radial-gradient(
+      93% 60% at -15% 23%,
+      #dce7ff68 0%,
+      #e4edff3a 50%,
+      #ffffff00 100%
+    );
 
   --card: 0 0% 100%;
   --card-foreground: 222.2 84% 4.9%;
@@ -33,31 +91,67 @@
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
+  --background: 217 84% 10%;
   --foreground: 210 40% 98%;
 
-  --card: 222.2 84% 4.9%;
+  background-image: radial-gradient(
+      54% 99% at 52% -21%,
+      #4a8af152 0%,
+      #785ff029 50%,
+      #3b46ef00 100%
+    ),
+    radial-gradient(
+      92% 59% at 117% 19%,
+      #3d60f534 0%,
+      #1c2c8f1a 50%,
+      #14141400 100%
+    ),
+    radial-gradient(
+      93% 60% at -15% 23%,
+      #29214d5e 0%,
+      #1a1e302f 50%,
+      #14141400 100%
+    );
+
+  --card: 217 84% 10%;
   --card-foreground: 210 40% 98%;
 
-  --popover: 222.2 84% 4.9%;
+  --popover: 217 84% 10%;
   --popover-foreground: 210 40% 98%;
 
   --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
+  --primary-foreground: 217 84% 10%;
 
-  --secondary: 217.2 32.6% 17.5%;
+  --secondary: 217 84% 15%; /* leggermente più chiaro */
   --secondary-foreground: 210 40% 98%;
 
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
+  --muted: 217 84% 20%; /* ancora più chiaro per elementi attenuati */
+  --muted-foreground: 215 20.2% 75%;
 
-  --accent: 217.2 32.6% 17.5%;
+  --accent: 217 84% 25%; /* per elementi di accento */
   --accent-foreground: 210 40% 98%;
 
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 220 2% 41%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9%;
+  --border: 217 84% 30%; /* bordi più visibili */
+  --input: 217 84% 15%;
+  --ring: 217 84% 40%; /* per focus rings */
+}
+
+@layer components {
+  .btn-gradient {
+    background: linear-gradient(90deg, #5600ff 0%, #6c0aff 50%, #5200bc 100%);
+    color: white;
+    transition: opacity 0.3s ease;
+  }
+
+  .btn-gradient:hover {
+    opacity: 0.9;
+  }
+}
+
+/* Sovrascrivi lo stile del bottone predefinito di Shadcn */
+.button-primary {
+  @apply btn-gradient border-0 !important;
 }

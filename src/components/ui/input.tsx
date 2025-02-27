@@ -1,9 +1,20 @@
 import * as React from "react";
 import { cn } from "../../lib/utils";
 
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
-  ({ className, type, style, ...props }, ref) => {
-    return (
+const Input = React.forwardRef<
+  HTMLInputElement,
+  React.ComponentProps<"input"> & { label?: string }
+>(({ className, type, style, label, ...props }, ref) => {
+  return (
+    <>
+      {label && (
+        <label
+          htmlFor="txHash"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          {label}
+        </label>
+      )}
       <input
         type={type}
         className={cn(
@@ -18,9 +29,9 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
         ref={ref}
         {...props}
       />
-    );
-  }
-);
+    </>
+  );
+});
 Input.displayName = "Input";
 
 export { Input };

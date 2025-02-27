@@ -17,12 +17,6 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
-      borderWidth: {
-        DEFAULT: "1px",
-        0: "0",
-        2: "2px",
-        4: "4px",
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input) / <alpha-value>)",

@@ -10,7 +10,7 @@ globalThis.Buffer = Buffer;
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider defaultTheme="system" enableSystem>
+    <ThemeProvider defaultTheme="system" enableSystem attribute="class">
       <App />
       <Toaster />
     </ThemeProvider>

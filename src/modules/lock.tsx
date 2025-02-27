@@ -1,16 +1,14 @@
 import { useWallet } from "@meshsdk/react";
 import { Form, Formik } from "formik";
+import { LockIcon } from "lucide-react";
 import { useState } from "react";
 import * as Yup from "yup";
-import { Button } from "../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
+import { ActionButton } from "../components/action-button";
+import { AlertBox } from "../components/info-box";
+import { TransactionCard } from "../components/transaction-card";
+import { TransactionDetail } from "../components/transaction-detail";
 import { Input } from "../components/ui/input";
+import { useToast } from "../components/ui/toast";
 import { WalletButton } from "../components/ui/wallet";
 import { lockAsset } from "../lib/lock-assets";
 
@@ -20,27 +18,48 @@ type LockFormValues = {
 
 export const Lock = () => {
   const { connected, wallet } = useWallet();
+  const { toast } = useToast();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isTransactionSubmitted, setIsTransactionSubmitted] =
     useState<boolean>(false);
 
   const [txHash, setTxHash] = useState<string>("");
 
   const handleLock = async (values: LockFormValues) => {
-    const txHash = await lockAsset(wallet, [
-      { unit: "lovelace", quantity: String(+values.amount * 1000000) },
-    ]);
-    setTxHash(txHash);
+    try {
+      setIsLoading(true);
+      const txHash = await lockAsset(wallet, [
+        { unit: "lovelace", quantity: String(+values.amount * 1000000) },
+      ]);
+      setTxHash(txHash);
 
-    setIsTransactionSubmitted(true);
+      toast({
+        title: "Transaction submitted successfully",
+        variant: "success",
+      });
+
+      setIsTransactionSubmitted(true);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="flex justify-center w-full">
-      <Card className="w-[75%]">
-        <CardHeader>
-          <CardTitle>Lock funds</CardTitle>
-        </CardHeader>
+    <TransactionCard
+      title="Lock Funds"
+      icon={
+        <LockIcon className="w-5 h-5 text-purple-700 dark:text-purple-400" />
+      }
+      isTransactionSubmitted={isTransactionSubmitted}
+      transactionDetail={<TransactionDetail txHash={txHash} />}
+    >
+      <div className="flex flex-col gap-5">
+        <AlertBox variant="info">
+          Enter the amount of ADA you want to lock on the Cardano blockchain.
+        </AlertBox>
 
         <Formik
           enableReinitialize
@@ -48,7 +67,6 @@ export const Lock = () => {
             amount: "",
           }}
           onSubmit={(values) => {
-            console.log(values);
             handleLock(values);
           }}
           validationSchema={Yup.object().shape({
@@ -56,42 +74,55 @@ export const Lock = () => {
           })}
         >
           {(formContext) => {
+            const hasError =
+              formContext.touched.amount && formContext.errors.amount;
+
             return (
               <>
                 <Form>
-                  <CardContent>
-                    <p>Lock funds to the Cardano blockchain</p>
+                  <div className="space-y-2">
                     <Input
-                      placeholder="Select ADA amount"
+                      label="Amount"
+                      id="amount"
+                      disabled={isLoading}
                       type="number"
-                      className="mt-2"
-                      style={{
-                        marginTop: "10px",
-                      }}
-                      onChange={(e) => {
-                        formContext.setFieldValue("amount", e.target.value);
-                      }}
+                      placeholder="Enter the amount here..."
+                      className={`py-5 pl-10 pr-4 font-mono text-sm ${
+                        hasError
+                          ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                          : "border-gray-300 dark:border-gray-700"
+                      }`}
+                      value={formContext.values.amount}
+                      onChange={(e) =>
+                        formContext.setFieldValue("amount", e.target.value)
+                      }
+                      onBlur={formContext.handleBlur("amount")}
                     />
-                  </CardContent>
-                  <CardFooter>
+                    {hasError && (
+                      <p className="text-sm text-red-600 dark:text-red-400 mt-1">
+                        {formContext.errors.amount}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex justify-end w-full mt-4">
                     {connected ? (
-                      <Button type="submit">Lock</Button>
+                      <ActionButton
+                        type="submit"
+                        isLoading={isLoading}
+                        variant="primary"
+                      >
+                        Lock Funds
+                      </ActionButton>
                     ) : (
                       <WalletButton />
                     )}
-                  </CardFooter>
+                  </div>
                 </Form>
               </>
             );
           }}
         </Formik>
-        {isTransactionSubmitted && (
-          <div className="mt-4">
-            <p>Transaction submitted successfully</p>
-            <p>Tx Hash: {txHash}</p>
-          </div>
-        )}
-      </Card>
-    </div>
+      </div>
+    </TransactionCard>
   );
 };
