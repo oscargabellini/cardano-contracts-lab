@@ -21,7 +21,7 @@ export const Lock = () => {
   const { toast } = useToast();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isTransactionSubmitted, setIsTransactionSubmitted] =
+  const [isTransactionDetailOpen, setIsTransactionDetailOpen] =
     useState<boolean>(false);
 
   const [txHash, setTxHash] = useState<string>("");
@@ -39,7 +39,7 @@ export const Lock = () => {
         variant: "success",
       });
 
-      setIsTransactionSubmitted(true);
+      setIsTransactionDetailOpen(true);
     } catch (error: any) {
       toast({
         title: "Transaction failed",
@@ -55,11 +55,14 @@ export const Lock = () => {
   return (
     <TransactionCard
       title="Lock Funds"
-      icon={
-        <LockIcon className="w-5 h-5 text-purple-700 dark:text-purple-400" />
+      icon={<LockIcon className="w-5 h-5 text-primary/100" />}
+      isTransactionDetailOpen={isTransactionDetailOpen}
+      transactionDetail={
+        <TransactionDetail
+          txHash={txHash}
+          onCloseDetail={() => setIsTransactionDetailOpen(false)}
+        />
       }
-      isTransactionSubmitted={isTransactionSubmitted}
-      transactionDetail={<TransactionDetail txHash={txHash} />}
     >
       <div className="flex flex-col gap-5">
         <AlertBox variant="info">

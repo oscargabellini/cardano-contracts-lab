@@ -5,7 +5,7 @@ type TransactionCardProps = {
   title: string;
   icon: ReactNode;
   children: ReactNode;
-  isTransactionSubmitted?: boolean;
+  isTransactionDetailOpen?: boolean;
   transactionDetail?: ReactNode;
   className?: string;
 };
@@ -14,21 +14,19 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
   title,
   icon,
   children,
-  isTransactionSubmitted,
+  isTransactionDetailOpen,
   transactionDetail,
   className = "",
 }) => {
   return (
     <div className="flex justify-center w-full my-8">
-      <Card
-        className={`w-[75%] border border-purple-100 dark:border-purple-900/30 overflow-hidden shadow-md ${className}`}
-      >
-        <CardHeader className="bg-gradient-to-r from-purple-50 to-white dark:from-purple-950/30 dark:to-slate-900/60 border-b border-purple-100 dark:border-purple-900/20">
+      <Card className={`w-[75%] border overflow-hidden shadow-md ${className}`}>
+        <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10 border-b ">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-purple-100 dark:bg-purple-900/40 rounded-full">
+            <div className="p-2 bg-primary/20 dark:bg-primary/30 rounded-full">
               {icon}
             </div>
-            <CardTitle className="text-xl text-purple-900 dark:text-purple-300">
+            <CardTitle className="text-xl text-primary-foreground">
               {title}
             </CardTitle>
           </div>
@@ -36,7 +34,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
 
         <CardContent className="pt-6 pb-8">{children}</CardContent>
 
-        {isTransactionSubmitted && transactionDetail}
+        {isTransactionDetailOpen && transactionDetail}
       </Card>
     </div>
   );

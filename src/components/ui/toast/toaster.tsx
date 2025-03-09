@@ -12,7 +12,7 @@ import {
 const iconMap = {
   default: <InfoIcon className="h-7 w-7" />,
   destructive: <AlertTriangleIcon className="h-7 w-7 text-white" />,
-  success: <CheckCircleIcon className="h-7 w-7 text-purple-900" />,
+  success: <CheckCircleIcon className="h-7 w-7 text-primary/100" />,
 };
 
 export function Toaster() {

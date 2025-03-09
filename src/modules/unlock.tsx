@@ -13,16 +13,36 @@ import { WalletButton } from "../components/ui/wallet";
 import { getUtxoByTxHash } from "../lib/common";
 import { buildUnlockTx } from "../lib/unlock-assets";
 
-const getErrorMessage = (error: any, walletName: string) => {
+const getErrorMessage = (error: any, walletName?: string) => {
   const errorInfo = error.info;
   const errorMessage = error.message;
+  let errorObj: any = {};
+
+  if (typeof error === "string") {
+    try {
+      errorObj = JSON.parse(error);
+    } catch (parseError) {
+      console.error("Error during the parsing of the error:", parseError);
+      errorObj = { message: error };
+    }
+  } else {
+    errorObj = error;
+  }
 
   switch (walletName) {
     case "lace":
       if (errorInfo && errorInfo.includes("MissingRequiredDatums")) {
         return "You have not the access to unlock this funds.";
       }
-      return errorInfo || error.message;
+      if (
+        errorObj.data.message &&
+        errorObj.data.message.includes(
+          "The requested component has not been found."
+        )
+      ) {
+        return "Transaction not found with the provided hash.";
+      }
+      return errorInfo || errorMessage || errorObj.data.message;
 
     case "eternl":
       if (
@@ -32,6 +52,14 @@ const getErrorMessage = (error: any, walletName: string) => {
         )
       ) {
         return "You have not the access to unlock this funds.";
+      }
+      if (
+        errorObj.data.message &&
+        errorObj.data.message.includes(
+          "The requested component has not been found."
+        )
+      ) {
+        return "Transaction not found with the provided hash.";
       }
       return errorMessage;
 
@@ -43,7 +71,7 @@ const getErrorMessage = (error: any, walletName: string) => {
 export const Unlock = () => {
   const { connected, wallet, name: walletName } = useWallet();
 
-  const [isTransactionSubmitted, setIsTransactionSubmitted] =
+  const [isTransactionDetailOpen, setIsTransactionDetailOpen] =
     useState<boolean>(false);
   const [txHash, setTxHash] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -56,7 +84,12 @@ export const Unlock = () => {
 
       const utxo = await getUtxoByTxHash(values.txHash);
       if (!utxo) {
-        throw new Error("UTxO not found");
+        toast({
+          title: "Transaction not found",
+          description: "Please check the transaction hash and try again.",
+          variant: "destructive",
+        });
+        return;
       }
 
       const unsignedTx = await buildUnlockTx(utxo, wallet, "Hello, World!");
@@ -65,7 +98,7 @@ export const Unlock = () => {
       const txHash = await wallet.submitTx(signedTx);
 
       setTxHash(txHash);
-      setIsTransactionSubmitted(true);
+      setIsTransactionDetailOpen(true);
 
       toast({
         title: "Transaction submitted successfully",
@@ -75,7 +108,7 @@ export const Unlock = () => {
     } catch (error: any) {
       toast({
         title: "Transaction failed",
-        description: getErrorMessage(error, walletName || ""),
+        description: getErrorMessage(error, walletName),
         variant: "destructive",
       });
       console.error("Unlock error:", error);
@@ -87,11 +120,14 @@ export const Unlock = () => {
   return (
     <TransactionCard
       title="Unlock Funds"
-      icon={
-        <UnlockIcon className="w-5 h-5 text-purple-700 dark:text-purple-400" />
+      icon={<UnlockIcon className="w-5 h-5 text-primary/100" />}
+      isTransactionDetailOpen={isTransactionDetailOpen}
+      transactionDetail={
+        <TransactionDetail
+          txHash={txHash}
+          onCloseDetail={() => setIsTransactionDetailOpen(false)}
+        />
       }
-      isTransactionSubmitted={isTransactionSubmitted}
-      transactionDetail={<TransactionDetail txHash={txHash} />}
     >
       <div className="flex flex-col gap-5">
         <AlertBox variant="info">

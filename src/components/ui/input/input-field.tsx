@@ -20,13 +20,13 @@ export const InputField = (props: InputFieldProps) => {
         className={cn(
           "py-5 pl-10 pr-4 text-sm transition-colors",
           meta.touched && meta.error
-            ? "!border-red-300  focus:!ring-red-300 "
-            : "border border-gray-300 dark:border-gray-700"
+            ? "!border-destructive  focus:!ring-destructive "
+            : "border border-secondary/30 dark:border-secondary/50"
         )}
         onChange={(e) => field.onChange(e)}
         onBlur={field.onBlur}
       />
-      <div className="text-sm text-red-600 dark:text-red-400 mt-1">
+      <div className="text-sm text-destructive mt-1">
         <ErrorMessage name={props.name} />
       </div>
     </>
