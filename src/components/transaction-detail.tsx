@@ -1,3 +1,5 @@
+import { CopyIcon } from "lucide-react";
+import { Button } from "./ui/button";
 import { useToast } from "./ui/toast";
 
 type TransactionDetailProps = {
@@ -13,7 +15,8 @@ export const TransactionDetail = ({ txHash }: TransactionDetailProps) => {
           <p className="text-sm font-medium text-purple-900 dark:text-purple-300">
             Transaction Details
           </p>
-          <button
+          <Button
+            variant="outline"
             className="text-xs px-3 py-1 rounded-full bg-purple-100 text-purple-700 hover:bg-purple-200 transition-colors dark:bg-purple-900/40 dark:text-purple-300 dark:hover:bg-purple-800/60"
             onClick={() => {
               navigator.clipboard.writeText(txHash);
@@ -23,8 +26,8 @@ export const TransactionDetail = ({ txHash }: TransactionDetailProps) => {
               });
             }}
           >
-            Copy Hash
-          </button>
+            Copy Hash <CopyIcon className="w-4 h-4" />
+          </Button>
         </div>
 
         <div className="p-3 bg-purple-50/80 rounded-md dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900/20">

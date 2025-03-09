@@ -7,13 +7,41 @@ import { ActionButton } from "../components/action-button";
 import { AlertBox } from "../components/info-box";
 import { TransactionCard } from "../components/transaction-card";
 import { TransactionDetail } from "../components/transaction-detail";
-import { Input } from "../components/ui/input";
+import { InputField } from "../components/ui/input/input-field";
+import { toast } from "../components/ui/toast";
 import { WalletButton } from "../components/ui/wallet";
 import { getUtxoByTxHash } from "../lib/common";
 import { buildUnlockTx } from "../lib/unlock-assets";
 
+const getErrorMessage = (error: any, walletName: string) => {
+  const errorInfo = error.info;
+  const errorMessage = error.message;
+
+  switch (walletName) {
+    case "lace":
+      if (errorInfo && errorInfo.includes("MissingRequiredDatums")) {
+        return "You have not the access to unlock this funds.";
+      }
+      return errorInfo || error.message;
+
+    case "eternl":
+      if (
+        errorMessage &&
+        errorMessage.includes(
+          "Transaction failed because some Plutus scripts are missing their associated datums"
+        )
+      ) {
+        return "You have not the access to unlock this funds.";
+      }
+      return errorMessage;
+
+    default:
+      return errorInfo || errorMessage;
+  }
+};
+
 export const Unlock = () => {
-  const { connected, wallet } = useWallet();
+  const { connected, wallet, name: walletName } = useWallet();
 
   const [isTransactionSubmitted, setIsTransactionSubmitted] =
     useState<boolean>(false);
@@ -38,7 +66,18 @@ export const Unlock = () => {
 
       setTxHash(txHash);
       setIsTransactionSubmitted(true);
-    } catch (error) {
+
+      toast({
+        title: "Transaction submitted successfully",
+        description: `Funds unlocked successfully. Soon you will receive your funds back.`,
+        variant: "success",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Transaction failed",
+        description: getErrorMessage(error, walletName || ""),
+        variant: "destructive",
+      });
       console.error("Unlock error:", error);
     } finally {
       setIsLoading(false);
@@ -54,67 +93,49 @@ export const Unlock = () => {
       isTransactionSubmitted={isTransactionSubmitted}
       transactionDetail={<TransactionDetail txHash={txHash} />}
     >
-      <Formik
-        initialValues={{ txHash: "" }}
-        onSubmit={handleUnlock}
-        validationSchema={Yup.object().shape({
-          txHash: Yup.string().required("Transaction hash is required"),
-        })}
-      >
-        {(formContext) => {
-          const hasError =
-            formContext.touched.txHash && formContext.errors.txHash;
-
-          return (
-            <Form className="flex flex-col h-full">
-              <div className="flex flex-col gap-5">
-                <AlertBox variant="info">
-                  Enter the transaction hash to retrieve your locked funds from
-                  the Cardano blockchain.
-                </AlertBox>
-
-                <div className="space-y-2">
-                  <Input
-                    id="txHash"
-                    label="Transaction Hash"
-                    disabled={isLoading}
-                    placeholder="Enter the transaction hash here..."
-                    className={`py-5 pl-10 pr-4 font-mono text-sm ${
-                      hasError
-                        ? "border-red-300 focus:ring-red-500 focus:border-red-500"
-                        : "border-gray-300 dark:border-gray-700"
-                    }`}
-                    // value={formContext.values.txHash}
-                    onChange={(e) =>
-                      formContext.setFieldValue("txHash", e.target.value)
-                    }
-                    onBlur={formContext.handleBlur("txHash")}
-                  />
-
-                  {hasError && (
-                    <p className="text-sm text-red-600 dark:text-red-400 mt-1">
-                      {formContext.errors.txHash}
-                    </p>
+      <div className="flex flex-col gap-5">
+        <AlertBox variant="info">
+          Enter the transaction hash to retrieve your locked funds from the
+          Cardano blockchain.
+        </AlertBox>
+        <Formik
+          initialValues={{ txHash: "" }}
+          onSubmit={(values, formContext) => {
+            handleUnlock(values);
+            formContext.resetForm();
+          }}
+          validationSchema={Yup.object().shape({
+            txHash: Yup.string().required("Transaction hash is required"),
+          })}
+        >
+          {() => {
+            return (
+              <Form className="flex flex-col h-full">
+                <InputField
+                  name="txHash"
+                  id="txHash"
+                  label="Transaction Hash"
+                  disabled={isLoading}
+                  placeholder="Enter the transaction hash here..."
+                />
+                <div className="flex justify-end w-full mt-4">
+                  {connected ? (
+                    <ActionButton
+                      type="submit"
+                      isLoading={isLoading}
+                      variant="primary"
+                    >
+                      Unlock Funds
+                    </ActionButton>
+                  ) : (
+                    <WalletButton />
                   )}
                 </div>
-              </div>
-              <div className="flex justify-end w-full mt-4">
-                {connected ? (
-                  <ActionButton
-                    type="submit"
-                    isLoading={isLoading}
-                    variant="primary"
-                  >
-                    Unlock Funds
-                  </ActionButton>
-                ) : (
-                  <WalletButton />
-                )}
-              </div>
-            </Form>
-          );
-        }}
-      </Formik>
+              </Form>
+            );
+          }}
+        </Formik>
+      </div>
     </TransactionCard>
   );
 };

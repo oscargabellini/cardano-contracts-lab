@@ -7,13 +7,13 @@ import { ActionButton } from "../components/action-button";
 import { AlertBox } from "../components/info-box";
 import { TransactionCard } from "../components/transaction-card";
 import { TransactionDetail } from "../components/transaction-detail";
-import { Input } from "../components/ui/input";
+import { InputField } from "../components/ui/input/input-field";
 import { useToast } from "../components/ui/toast";
 import { WalletButton } from "../components/ui/wallet";
 import { lockAsset } from "../lib/lock-assets";
 
 type LockFormValues = {
-  amount: string;
+  amount: number;
 };
 
 export const Lock = () => {
@@ -30,7 +30,7 @@ export const Lock = () => {
     try {
       setIsLoading(true);
       const txHash = await lockAsset(wallet, [
-        { unit: "lovelace", quantity: String(+values.amount * 1000000) },
+        { unit: "lovelace", quantity: String(values.amount * 1000000) },
       ]);
       setTxHash(txHash);
 
@@ -40,7 +40,12 @@ export const Lock = () => {
       });
 
       setIsTransactionSubmitted(true);
-    } catch (error) {
+    } catch (error: any) {
+      toast({
+        title: "Transaction failed",
+        description: error.info || error.message,
+        variant: "destructive",
+      });
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -64,46 +69,30 @@ export const Lock = () => {
         <Formik
           enableReinitialize
           initialValues={{
-            amount: "",
+            amount: 0,
           }}
-          onSubmit={(values) => {
+          onSubmit={(values, formContext) => {
             handleLock(values);
+            formContext.resetForm();
           }}
           validationSchema={Yup.object().shape({
-            amount: Yup.number().required("Amount is required"),
+            amount: Yup.number()
+              .required("Amount is required")
+              .min(2, "Amount must be greater than or equal to 2"),
           })}
         >
-          {(formContext) => {
-            const hasError =
-              formContext.touched.amount && formContext.errors.amount;
-
+          {() => {
             return (
               <>
                 <Form>
-                  <div className="space-y-2">
-                    <Input
-                      label="Amount"
-                      id="amount"
-                      disabled={isLoading}
-                      type="number"
-                      placeholder="Enter the amount here..."
-                      className={`py-5 pl-10 pr-4 font-mono text-sm ${
-                        hasError
-                          ? "border-red-300 focus:ring-red-500 focus:border-red-500"
-                          : "border-gray-300 dark:border-gray-700"
-                      }`}
-                      value={formContext.values.amount}
-                      onChange={(e) =>
-                        formContext.setFieldValue("amount", e.target.value)
-                      }
-                      onBlur={formContext.handleBlur("amount")}
-                    />
-                    {hasError && (
-                      <p className="text-sm text-red-600 dark:text-red-400 mt-1">
-                        {formContext.errors.amount}
-                      </p>
-                    )}
-                  </div>
+                  <InputField
+                    name="amount"
+                    id="amount"
+                    label="Amount"
+                    type="number"
+                    placeholder="Enter the amount here..."
+                    disabled={isLoading}
+                  />
                   <div className="flex justify-end w-full mt-4">
                     {connected ? (
                       <ActionButton
