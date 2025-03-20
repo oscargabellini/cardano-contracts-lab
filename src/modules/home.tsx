@@ -1,17 +1,15 @@
-import { Navbar } from "../components/navbar";
-import { Lock } from "./lock";
-import { Unlock } from "./unlock";
+import { contractOptions } from "../config/contract-options";
+import { ContractCard } from "../modules/card-option";
 
-export const Home = () => {
+export const HomePage = () => {
   return (
-    <>
-      <div>
-        <Navbar />
-        <div className="grid grid-cols-2 gap-4 justify-center w-full mt-10">
-          <Lock />
-          <Unlock />
-        </div>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Select a contract</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {contractOptions.map((option, index) => (
+          <ContractCard key={index} option={option} />
+        ))}
       </div>
-    </>
+    </div>
   );
 };

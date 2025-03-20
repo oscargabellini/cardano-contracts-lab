@@ -12,7 +12,7 @@ type InputFieldProps = {
 export const InputField = (props: InputFieldProps) => {
   const [field, meta] = useField(props);
   return (
-    <>
+    <div>
       <Input
         type={props.type || "text"}
         {...props}
@@ -29,6 +29,6 @@ export const InputField = (props: InputFieldProps) => {
       <div className="text-sm text-destructive mt-1">
         <ErrorMessage name={props.name} />
       </div>
-    </>
+    </div>
   );
 };

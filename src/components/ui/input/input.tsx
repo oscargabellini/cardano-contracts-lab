@@ -6,7 +6,7 @@ const Input = React.forwardRef<
   React.ComponentProps<"input"> & { label?: string }
 >(({ className, type, style, label, ...props }, ref) => {
   return (
-    <>
+    <div>
       {label && (
         <label
           htmlFor="txHash"
@@ -29,7 +29,7 @@ const Input = React.forwardRef<
         ref={ref}
         {...props}
       />
-    </>
+    </div>
   );
 });
 Input.displayName = "Input";

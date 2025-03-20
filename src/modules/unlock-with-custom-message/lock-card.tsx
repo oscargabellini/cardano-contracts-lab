@@ -3,20 +3,21 @@ import { Form, Formik } from "formik";
 import { LockIcon } from "lucide-react";
 import { useState } from "react";
 import * as Yup from "yup";
-import { ActionButton } from "../components/action-button";
-import { AlertBox } from "../components/info-box";
-import { TransactionCard } from "../components/transaction-card";
-import { TransactionDetail } from "../components/transaction-detail";
-import { InputField } from "../components/ui/input/input-field";
-import { useToast } from "../components/ui/toast";
-import { WalletButton } from "../components/ui/wallet";
-import { lockAsset } from "../lib/lock-assets";
+import { ActionButton } from "../../components/action-button";
+import { AlertBox } from "../../components/info-box";
+import { TransactionCard } from "../../components/transaction-card";
+import { TransactionDetail } from "../../components/transaction-detail";
+import { InputField } from "../../components/ui/input/input-field";
+import { useToast } from "../../components/ui/toast";
+import { WalletButton } from "../../components/ui/wallet";
+import { lockAsset } from "../../lib/unlock-with-custom-message/lock-assets";
 
 type LockFormValues = {
   amount: number;
+  message: string;
 };
 
-export const Lock = () => {
+export const LockCardWithCustomMessage = () => {
   const { connected, wallet } = useWallet();
   const { toast } = useToast();
 
@@ -29,9 +30,13 @@ export const Lock = () => {
   const handleLock = async (values: LockFormValues) => {
     try {
       setIsLoading(true);
-      const txHash = await lockAsset(wallet, [
-        { unit: "lovelace", quantity: String(values.amount * 1000000) },
-      ]);
+
+      const txHash = await lockAsset(
+        wallet,
+        [{ unit: "lovelace", quantity: String(values.amount * 1000000) }],
+        values.message
+      );
+
       setTxHash(txHash);
 
       toast({
@@ -66,13 +71,14 @@ export const Lock = () => {
     >
       <div className="flex flex-col gap-5">
         <AlertBox variant="info">
-          Enter the amount of ADA you want to lock on the Cardano blockchain.
+          Enter the amount of ADA you want to lock on the blockchain.
         </AlertBox>
 
         <Formik
           enableReinitialize
           initialValues={{
             amount: 0,
+            message: "",
           }}
           onSubmit={(values, formContext) => {
             handleLock(values);
@@ -82,20 +88,29 @@ export const Lock = () => {
             amount: Yup.number()
               .required("Amount is required")
               .min(2, "Amount must be greater than or equal to 2"),
+            message: Yup.string().required("Message is required"),
           })}
         >
           {() => {
             return (
               <>
                 <Form>
-                  <InputField
-                    name="amount"
-                    id="amount"
-                    label="Amount"
-                    type="number"
-                    placeholder="Enter the amount here..."
-                    disabled={isLoading}
-                  />
+                  <div className="flex flex-col gap-2">
+                    <InputField
+                      name="amount"
+                      id="amount"
+                      label="Amount"
+                      type="number"
+                      placeholder="Enter the amount here"
+                      disabled={isLoading}
+                    />
+                    <InputField
+                      name="message"
+                      id="message"
+                      label="Message"
+                      placeholder="Enter your message here"
+                    />
+                  </div>
                   <div className="flex justify-end w-full mt-4">
                     {connected ? (
                       <ActionButton

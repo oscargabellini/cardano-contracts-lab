@@ -1,14 +1,15 @@
 import { MeshProvider } from "@meshsdk/react";
 import "@meshsdk/react/styles.css";
+import { RouterProvider } from "@tanstack/react-router";
 import "./App.css";
-import { Home } from "./modules/home";
+import { router } from "./router/routes";
 
 function App() {
   return (
     <>
       <main>
         <MeshProvider>
-          <Home />
+          <RouterProvider router={router} />
         </MeshProvider>
       </main>
     </>

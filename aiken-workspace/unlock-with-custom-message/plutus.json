@@ -1,0 +1,85 @@
+{
+  "preamble": {
+    "title": "aiken-lang/lock-unlock",
+    "description": "Aiken contracts for project 'aiken-lang/lock-unlock'",
+    "version": "0.0.0",
+    "plutusVersion": "v3",
+    "compiler": {
+      "name": "Aiken",
+      "version": "v1.1.7+e2fb28b"
+    },
+    "license": "Apache-2.0"
+  },
+  "validators": [
+    {
+      "title": "unlock_with_custom_message.unlock.spend",
+      "datum": {
+        "title": "datum_opt",
+        "schema": {
+          "$ref": "#/definitions/unlock_with_custom_message~1Datum"
+        }
+      },
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/unlock_with_custom_message~1Redeemer"
+        }
+      },
+      "compiledCode": "59010801010032323232323225333002323232323253330073370e900118041baa0011323322533300a3370e900018059baa00513232533300f30110021533300c3370e900018069baa0031323232533300f3371e6eb8c008c044dd50051bae301330143011375400620022940cc88c8cc00400400c894ccc05400452809991299980a19b8f00200514a22660080080026eb8c058004c05c004dd618091809980998099809980998099809980998081baa00a375c600260206ea80088c048004c040c038dd50018b0b1bae300f001300c375400a2c60180026018601a00260126ea800458c028c02c00cc024008c020008c020004c010dd50008a4c26cacae6955ceaab9e5573eae855d11",
+      "hash": "9122a22bc88a75814f8a1fe85266a2a65a76763945af33722ec0bea5"
+    },
+    {
+      "title": "unlock_with_custom_message.unlock.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "59010801010032323232323225333002323232323253330073370e900118041baa0011323322533300a3370e900018059baa00513232533300f30110021533300c3370e900018069baa0031323232533300f3371e6eb8c008c044dd50051bae301330143011375400620022940cc88c8cc00400400c894ccc05400452809991299980a19b8f00200514a22660080080026eb8c058004c05c004dd618091809980998099809980998099809980998081baa00a375c600260206ea80088c048004c040c038dd50018b0b1bae300f001300c375400a2c60180026018601a00260126ea800458c028c02c00cc024008c020008c020004c010dd50008a4c26cacae6955ceaab9e5573eae855d11",
+      "hash": "9122a22bc88a75814f8a1fe85266a2a65a76763945af33722ec0bea5"
+    }
+  ],
+  "definitions": {
+    "ByteArray": {
+      "dataType": "bytes"
+    },
+    "VerificationKeyHash": {
+      "title": "VerificationKeyHash",
+      "dataType": "bytes"
+    },
+    "unlock_with_custom_message/Datum": {
+      "title": "Datum",
+      "anyOf": [
+        {
+          "title": "Datum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "owner",
+              "$ref": "#/definitions/VerificationKeyHash"
+            },
+            {
+              "title": "required_msg",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "unlock_with_custom_message/Redeemer": {
+      "title": "Redeemer",
+      "anyOf": [
+        {
+          "title": "Redeemer",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "msg",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

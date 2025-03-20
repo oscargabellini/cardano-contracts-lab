@@ -20,7 +20,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
 }) => {
   return (
     <div className="flex justify-center w-full my-8">
-      <Card className={`w-[75%] border overflow-hidden shadow-md ${className}`}>
+      <Card className={`w-full border overflow-hidden shadow-md ${className}`}>
         <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10 border-b ">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/20 dark:bg-primary/30 rounded-full">
