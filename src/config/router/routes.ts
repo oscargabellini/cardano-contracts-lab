@@ -3,10 +3,10 @@ import {
   createRoute,
   createRouter,
 } from "@tanstack/react-router";
-import { RootLayout } from "../components/root-layout";
-import { HomePage } from "../modules/home";
-import { UnlockFundsPage } from "../modules/unlock-funds/unlock-funds.page";
-import { UnlockFundsWithCustomMessagePage } from "../modules/unlock-with-custom-message/unlock-with-custom-message.page";
+import { RootLayout } from "../../components/common/root-layout";
+import { HomePage } from "../../pages/home";
+import { UnlockFundsPage } from "../../pages/unlock-assets/unlock-funds.page";
+import { UnlockFundsWithCustomMessagePage } from "../../pages/unlock-with-custom-message/unlock-with-custom-message.page";
 
 const rootRoute = createRootRoute({
   component: RootLayout,

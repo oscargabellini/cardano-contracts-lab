@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Button } from "./ui/button";
+import { Button } from "./button";
 
 type ActionButtonProps = {
   type?: "button" | "submit" | "reset";

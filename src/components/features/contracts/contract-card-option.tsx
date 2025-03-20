@@ -1,18 +1,18 @@
 import { useNavigate } from "@tanstack/react-router";
+import { ContractOption } from "../../../config/contract-options";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { ContractOption } from "../config/contract-options";
+} from "../../ui/card";
 
-interface ContractCardProps {
+interface ContractOptionCardProps {
   option: ContractOption;
 }
 
-export const ContractCard = ({ option }: ContractCardProps) => {
+export const ContractOptionCard = ({ option }: ContractOptionCardProps) => {
   const navigate = useNavigate();
 
   return (

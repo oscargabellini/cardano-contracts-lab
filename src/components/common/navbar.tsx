@@ -1,14 +1,14 @@
 import { SunIcon } from "@radix-ui/react-icons";
 import { Monitor, MoonStar } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { WalletButton } from "./ui/wallet";
+} from "../ui/dropdown-menu";
+import { WalletButton } from "../ui/wallet";
 
 export function Navbar() {
   const { setTheme, theme } = useTheme();

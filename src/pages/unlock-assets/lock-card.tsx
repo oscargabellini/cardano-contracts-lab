@@ -3,21 +3,20 @@ import { Form, Formik } from "formik";
 import { LockIcon } from "lucide-react";
 import { useState } from "react";
 import * as Yup from "yup";
-import { ActionButton } from "../../components/action-button";
-import { AlertBox } from "../../components/info-box";
-import { TransactionCard } from "../../components/transaction-card";
-import { TransactionDetail } from "../../components/transaction-detail";
+import { TransactionDetail } from "../../components/features/transaction-detail";
+import { ActionButton } from "../../components/ui/action-button";
+import { AlertBox } from "../../components/ui/alert-box";
 import { InputField } from "../../components/ui/input/input-field";
 import { useToast } from "../../components/ui/toast";
+import { TransactionCard } from "../../components/ui/transaction-card";
 import { WalletButton } from "../../components/ui/wallet";
-import { lockAsset } from "../../lib/unlock-with-custom-message/lock-assets";
+import { lockAsset } from "../../lib/cardano/unlock-assets/lock-assets";
 
 type LockFormValues = {
   amount: number;
-  message: string;
 };
 
-export const LockCardWithCustomMessage = () => {
+export const LockCard = () => {
   const { connected, wallet } = useWallet();
   const { toast } = useToast();
 
@@ -30,13 +29,9 @@ export const LockCardWithCustomMessage = () => {
   const handleLock = async (values: LockFormValues) => {
     try {
       setIsLoading(true);
-
-      const txHash = await lockAsset(
-        wallet,
-        [{ unit: "lovelace", quantity: String(values.amount * 1000000) }],
-        values.message
-      );
-
+      const txHash = await lockAsset(wallet, [
+        { unit: "lovelace", quantity: String(values.amount * 1000000) },
+      ]);
       setTxHash(txHash);
 
       toast({
@@ -78,7 +73,6 @@ export const LockCardWithCustomMessage = () => {
           enableReinitialize
           initialValues={{
             amount: 0,
-            message: "",
           }}
           onSubmit={(values, formContext) => {
             handleLock(values);
@@ -88,29 +82,20 @@ export const LockCardWithCustomMessage = () => {
             amount: Yup.number()
               .required("Amount is required")
               .min(2, "Amount must be greater than or equal to 2"),
-            message: Yup.string().required("Message is required"),
           })}
         >
           {() => {
             return (
               <>
                 <Form>
-                  <div className="flex flex-col gap-2">
-                    <InputField
-                      name="amount"
-                      id="amount"
-                      label="Amount"
-                      type="number"
-                      placeholder="Enter the amount here"
-                      disabled={isLoading}
-                    />
-                    <InputField
-                      name="message"
-                      id="message"
-                      label="Message"
-                      placeholder="Enter your message here"
-                    />
-                  </div>
+                  <InputField
+                    name="amount"
+                    id="amount"
+                    label="Amount"
+                    type="number"
+                    placeholder="Enter the amount here..."
+                    disabled={isLoading}
+                  />
                   <div className="flex justify-end w-full mt-4">
                     {connected ? (
                       <ActionButton

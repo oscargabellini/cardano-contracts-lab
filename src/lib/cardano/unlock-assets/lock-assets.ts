@@ -1,11 +1,14 @@
-import { Asset, IWallet, deserializeAddress, mConStr0 } from "@meshsdk/core";
-import blueprint from "../../../aiken-workspace/unlock-with-custom-message/plutus.json";
-import { getScript, getTxBuilder, getWalletInfoForTx } from "../common";
+import { Asset, deserializeAddress, mConStr0 } from "@meshsdk/core";
+import blueprint from "../../../../aiken-workspace/unlock-with-fixed-message/plutus.json";
+import {
+  getScript,
+  getTxBuilder,
+  getWalletInfoForTx,
+} from "../cardano-helpers";
 
 export async function lockAsset(
-  connectedWallet: IWallet,
-  assets: Asset[],
-  message: string
+  connectedWallet: any,
+  assets: Asset[]
 ): Promise<string> {
   const { utxos, walletAddress } = await getWalletInfoForTx(connectedWallet);
   const { scriptAddr } = getScript(blueprint.validators[0].compiledCode);
@@ -15,7 +18,7 @@ export async function lockAsset(
   const txBuilder = getTxBuilder();
   await txBuilder
     .txOut(scriptAddr, assets)
-    .txOutDatumHashValue(mConStr0([signerHash, message]))
+    .txOutDatumHashValue(mConStr0([signerHash]))
     .changeAddress(walletAddress)
     .selectUtxosFrom(utxos)
     .complete();

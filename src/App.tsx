@@ -2,7 +2,7 @@ import { MeshProvider } from "@meshsdk/react";
 import "@meshsdk/react/styles.css";
 import { RouterProvider } from "@tanstack/react-router";
 import "./App.css";
-import { router } from "./router/routes";
+import { router } from "./config/router/routes";
 
 function App() {
   return (

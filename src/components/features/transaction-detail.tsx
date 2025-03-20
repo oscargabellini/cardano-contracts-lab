@@ -1,6 +1,6 @@
 import { CopyIcon, XIcon } from "lucide-react";
-import { Button } from "./ui/button";
-import { useToast } from "./ui/toast";
+import { Button } from "../ui/button";
+import { useToast } from "../ui/toast";
 
 type TransactionDetailProps = {
   txHash: string;
