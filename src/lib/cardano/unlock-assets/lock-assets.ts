@@ -1,5 +1,5 @@
 import { Asset, deserializeAddress, mConStr0 } from "@meshsdk/core";
-import blueprint from "../../../../aiken-workspace/unlock-with-fixed-message/plutus.json";
+import blueprint from "../../../../aiken-workspace/unlock-assets/plutus.json";
 import {
   getScript,
   getTxBuilder,

@@ -1,0 +1,72 @@
+{
+  "preamble": {
+    "title": "aiken-lang/lock-unlock",
+    "description": "Aiken contracts for project 'aiken-lang/lock-unlock'",
+    "version": "0.0.0",
+    "plutusVersion": "v3",
+    "compiler": {
+      "name": "Aiken",
+      "version": "v1.1.7+e2fb28b"
+    },
+    "license": "Apache-2.0"
+  },
+  "validators": [
+    {
+      "title": "unlock.unlock.spend",
+      "datum": {
+        "title": "datum_opt",
+        "schema": {
+          "$ref": "#/definitions/unlock~1Datum"
+        }
+      },
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "compiledCode": "58d901010032323232323225333002323232323253330073370e900118041baa001132332232533300b3370e900018061baa00213322323300100100322533301200114a026644a66602266e3c0080145288998020020009bae301300130140013758601e60206020602060206020602060206020601a6ea801cdd7180798069baa300f300d37540042ca66601466e1d2000300b375400a2a66601a60186ea80145261616300c001300c300d001300937540022c6014601600660120046010004601000260086ea8004526136565734aae7555cf2ab9f5742ae881",
+      "hash": "361e9488a096528c40f238bdce80d00eb0e03ed86e013df85622c436"
+    },
+    {
+      "title": "unlock.unlock.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "58d901010032323232323225333002323232323253330073370e900118041baa001132332232533300b3370e900018061baa00213322323300100100322533301200114a026644a66602266e3c0080145288998020020009bae301300130140013758601e60206020602060206020602060206020601a6ea801cdd7180798069baa300f300d37540042ca66601466e1d2000300b375400a2a66601a60186ea80145261616300c001300c300d001300937540022c6014601600660120046010004601000260086ea8004526136565734aae7555cf2ab9f5742ae881",
+      "hash": "361e9488a096528c40f238bdce80d00eb0e03ed86e013df85622c436"
+    }
+  ],
+  "definitions": {
+    "VerificationKeyHash": {
+      "title": "VerificationKeyHash",
+      "dataType": "bytes"
+    },
+    "Void": {
+      "title": "Unit",
+      "anyOf": [
+        {
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        }
+      ]
+    },
+    "unlock/Datum": {
+      "title": "Datum",
+      "anyOf": [
+        {
+          "title": "Datum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "owner",
+              "$ref": "#/definitions/VerificationKeyHash"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

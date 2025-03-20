@@ -37,7 +37,7 @@ export const UnlockCard = () => {
         return;
       }
 
-      const unsignedTx = await buildUnlockTx(utxo, wallet, "Hello, World!");
+      const unsignedTx = await buildUnlockTx(utxo, wallet);
 
       const signedTx = await wallet.signTx(unsignedTx, true);
       const txHash = await wallet.submitTx(signedTx);
@@ -98,6 +98,7 @@ export const UnlockCard = () => {
                   label="Transaction Hash"
                   disabled={isLoading}
                   placeholder="Enter the transaction hash here..."
+                  autoComplete="off"
                 />
                 <div className="flex justify-end w-full mt-4">
                   {connected ? (
@@ -125,6 +126,8 @@ const getErrorMessage = (error: any, walletName?: string) => {
   const errorInfo = error.info;
   const errorMessage = error.message;
   let errorObj: any = {};
+
+  console.log(error);
 
   if (typeof error === "string") {
     try {

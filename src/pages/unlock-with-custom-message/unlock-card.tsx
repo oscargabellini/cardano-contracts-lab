@@ -94,7 +94,7 @@ export const UnlockCardWithCustomMessage = () => {
           }}
           validationSchema={Yup.object().shape({
             txHash: Yup.string().required("Transaction hash is required"),
-            customMessage: Yup.string().required("Custom message is required"),
+            customMessage: Yup.string().required("Message is required"),
           })}
         >
           {() => {
@@ -107,6 +107,7 @@ export const UnlockCardWithCustomMessage = () => {
                     label="Transaction Hash"
                     disabled={isLoading}
                     placeholder="Enter the transaction hash here..."
+                    autoComplete="off"
                   />
                   <InputField
                     name="customMessage"
@@ -114,6 +115,7 @@ export const UnlockCardWithCustomMessage = () => {
                     label="Message"
                     disabled={isLoading}
                     placeholder="Enter the message to unlock the funds"
+                    autoComplete="off"
                   />
                 </div>
                 <div className="flex justify-end w-full mt-4">

@@ -17,14 +17,21 @@ export const ContractOptionCard = ({ option }: ContractOptionCardProps) => {
 
   return (
     <Card
-      className="cursor-pointer hover:shadow-md transition-shadow hover:bg-primary/10"
+      className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:bg-primary/5 border-primary/10"
       onClick={() => navigate({ to: option.navigateTo })}
     >
-      <CardHeader>
-        <CardTitle>{option.title}</CardTitle>
+      <CardHeader className="pb-2 flex flex-row items-center gap-4">
+        <div className="p-3 rounded-full bg-primary/80 dark:bg-primary/50 text-primary-foreground">
+          {option.icon}
+        </div>
+        <div>
+          <CardTitle className="text-xl font-medium">{option.title}</CardTitle>
+        </div>
       </CardHeader>
-      <CardContent className="text-sm text-secondary-foreground">
-        <CardDescription>{option.description}</CardDescription>
+      <CardContent className="pt-3 pb-5">
+        <CardDescription className="text-sm text-secondary-foreground leading-relaxed">
+          {option.description}
+        </CardDescription>
       </CardContent>
     </Card>
   );

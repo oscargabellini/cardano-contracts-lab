@@ -103,12 +103,14 @@ export const LockCardWithCustomMessage = () => {
                       type="number"
                       placeholder="Enter the amount here"
                       disabled={isLoading}
+                      autoComplete="off"
                     />
                     <InputField
                       name="message"
                       id="message"
                       label="Message"
                       placeholder="Enter your message here"
+                      autoComplete="off"
                     />
                   </div>
                   <div className="flex justify-end w-full mt-4">

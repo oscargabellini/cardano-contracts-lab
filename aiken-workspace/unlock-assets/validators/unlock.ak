@@ -9,21 +9,16 @@ pub type Datum {
   owner: VerificationKeyHash,
 }
 
-pub type Redeemer {
-  msg: ByteArray,
-}
-
 validator unlock {
   spend(
     datum_opt: Option<Datum>,
-    redeemer: Redeemer,
+    _redeemer: Void,
     _input: OutputReference,
     tx: Transaction,
   ) {
     expect Some(datum) = datum_opt
-    let must_say_hello = redeemer.msg == "Hello, World!"
     let must_be_signed = list.has(tx.extra_signatories, datum.owner)
-    must_say_hello && must_be_signed
+    must_be_signed
   }
 
   else(_) {
@@ -39,21 +34,12 @@ fn mock_tx(is_owner_signed: Bool) -> Transaction {
 
 test test_unlock() {
   let datum = Some(Datum { owner: mock_pub_key_hash(0) })
-  let redeemer = Redeemer { msg: "Hello, World!" }
   let tx = mock_tx(True)
-  unlock.spend(datum, redeemer, mock_utxo_ref(0, 0), tx)
-}
-
-test test_failed_unlock_incorrect_redeemer() {
-  let datum = Some(Datum { owner: mock_pub_key_hash(0) })
-  let redeemer = Redeemer { msg: "GM World!" }
-  let tx = mock_tx(True)
-  !unlock.spend(datum, redeemer, mock_utxo_ref(0, 0), tx)
+  unlock.spend(datum, Void, mock_utxo_ref(0, 0), tx)
 }
 
 test test_failed_unlock_without_signer() {
   let datum = Some(Datum { owner: mock_pub_key_hash(0) })
-  let redeemer = Redeemer { msg: "Hello, World!" }
   let tx = mock_tx(False)
-  !unlock.spend(datum, redeemer, mock_utxo_ref(0, 0), tx)
+  !unlock.spend(datum, Void, mock_utxo_ref(0, 0), tx)
 }

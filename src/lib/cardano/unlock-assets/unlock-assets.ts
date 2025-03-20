@@ -1,11 +1,5 @@
-import {
-  deserializeAddress,
-  IWallet,
-  mConStr0,
-  stringToHex,
-  UTxO,
-} from "@meshsdk/core";
-import blueprint from "../../../../aiken-workspace/unlock-with-fixed-message/plutus.json";
+import { deserializeAddress, IWallet, mConStr0, UTxO } from "@meshsdk/core";
+import blueprint from "../../../../aiken-workspace/unlock-assets/plutus.json";
 import {
   getScript,
   getTxBuilder,
@@ -14,8 +8,7 @@ import {
 
 export async function buildUnlockTx(
   scriptUtxo: UTxO,
-  connectedWallet: IWallet,
-  message: string
+  connectedWallet: IWallet
 ): Promise<string> {
   const { utxos, collateral, walletAddress } = await getWalletInfoForTx(
     connectedWallet
@@ -33,7 +26,7 @@ export async function buildUnlockTx(
       scriptUtxo.output.address
     )
     .txInScript(scriptCbor)
-    .txInRedeemerValue(mConStr0([stringToHex(message)]))
+    .txInRedeemerValue(mConStr0([]))
     .txInDatumValue(mConStr0([signerHash]))
     .requiredSignerHash(signerHash)
     .changeAddress(walletAddress)
