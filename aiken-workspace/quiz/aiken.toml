@@ -1,13 +1,13 @@
-name = "aiken-lang/unlock-assets"
+name = "aiken-lang/quiz"
 version = "0.0.0"
 compiler = "v1.1.7"
 plutus = "v3"
 license = "Apache-2.0"
-description = "Aiken contracts for project 'aiken-lang/lock-unlock'"
+description = "Aiken contracts for project 'aiken-lang/quiz'"
 
 [repository]
-user = "oscargabellini"
-project = "cardano-contracts-lab"
+user = "oscar"
+project = "quiz"
 platform = "github"
 
 [[dependencies]]
@@ -17,7 +17,7 @@ source = "github"
 
 [[dependencies]]
 name = "sidan-lab/vodka"
-version = "0.1.0-beta"
+version = "0.1.11"
 source = "github"
 
 [config]

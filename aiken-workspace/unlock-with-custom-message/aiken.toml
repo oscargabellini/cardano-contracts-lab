@@ -1,4 +1,4 @@
-name = "aiken-lang/lock-unlock"
+name = "aiken-lang/unlock-with-custom-message"
 version = "0.0.0"
 compiler = "v1.1.7"
 plutus = "v3"
@@ -6,8 +6,8 @@ license = "Apache-2.0"
 description = "Aiken contracts for project 'aiken-lang/lock-unlock'"
 
 [repository]
-user = "jingles"
-project = "test1"
+user = "oscargabellini"
+project = "cardano-contracts-lab"
 platform = "github"
 
 [[dependencies]]

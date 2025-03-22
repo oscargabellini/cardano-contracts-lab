@@ -1,6 +1,6 @@
 {
   "preamble": {
-    "title": "aiken-lang/lock-unlock",
+    "title": "aiken-lang/unlock-assets",
     "description": "Aiken contracts for project 'aiken-lang/lock-unlock'",
     "version": "0.0.0",
     "plutusVersion": "v3",
