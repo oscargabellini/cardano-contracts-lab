@@ -1,13 +1,10 @@
 use aiken/crypto
-use cardano/address.{Address}
 use cardano/transaction.{OutputReference, Transaction}
 use mocktail.{complete, mocktail_tx}
-use mocktail/virgin_key_hash.{mock_pub_key_hash}
 use mocktail/virgin_output_reference.{mock_utxo_ref}
 
 pub type Datum {
   answer_hash: ByteArray,
-  fee_address: Address,
   question: ByteArray,
 }
 
@@ -37,11 +34,6 @@ validator quiz {
   }
 }
 
-fn mock_address(index: Int) -> address.Address {
-  let mock_key_hash = mock_pub_key_hash(index)
-  address.from_verification_key(mock_key_hash)
-}
-
 fn mock_tx() -> Transaction {
   mocktail_tx()
     |> complete()
@@ -52,7 +44,6 @@ test right_answer() {
     Some(
       Datum {
         answer_hash: hash_answer("20"),
-        fee_address: mock_address(0),
         question: "How many Scudetto has Inter won?",
       },
     )
@@ -68,7 +59,6 @@ test wrong_answer() {
     Some(
       Datum {
         answer_hash: hash_answer("20"),
-        fee_address: mock_address(0),
         question: "How many Scudetto has Inter won?",
       },
     )
@@ -84,7 +74,6 @@ test empty_answer() {
     Some(
       Datum {
         answer_hash: hash_answer("20"),
-        fee_address: mock_address(0),
         question: "How many Scudetto has Inter won?",
       },
     )
