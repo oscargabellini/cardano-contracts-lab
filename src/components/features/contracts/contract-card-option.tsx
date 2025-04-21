@@ -25,7 +25,9 @@ export const ContractOptionCard = ({ option }: ContractOptionCardProps) => {
           {option.icon}
         </div>
         <div>
-          <CardTitle className="text-xl font-medium">{option.title}</CardTitle>
+          <CardTitle className="text-xl font-semibold">
+            {option.title}
+          </CardTitle>
         </div>
       </CardHeader>
       <CardContent className="pt-3 pb-5">

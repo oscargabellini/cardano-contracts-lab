@@ -60,7 +60,7 @@ export const LockCardWithCustomMessage = () => {
   return (
     <TransactionCard
       title="Lock Funds"
-      icon={<LockIcon className="w-5 h-5 text-primary/100" />}
+      icon={<LockIcon className="w-4 h-4" />}
       isTransactionDetailOpen={isTransactionDetailOpen}
       transactionDetail={
         <TransactionDetail

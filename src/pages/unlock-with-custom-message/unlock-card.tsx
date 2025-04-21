@@ -72,7 +72,7 @@ export const UnlockCardWithCustomMessage = () => {
   return (
     <TransactionCard
       title="Unlock Funds"
-      icon={<UnlockIcon className="w-5 h-5 text-primary/100" />}
+      icon={<UnlockIcon className="w-4 h-4" />}
       isTransactionDetailOpen={isTransactionDetailOpen}
       transactionDetail={
         <TransactionDetail
@@ -83,8 +83,8 @@ export const UnlockCardWithCustomMessage = () => {
     >
       <div className="flex flex-col gap-5">
         <AlertBox variant="info">
-          Enter the transaction hash to retrieve your locked funds from the
-          blockchain.
+          Enter the transaction hash and the message to unlock your funds from
+          the blockchain.
         </AlertBox>
         <Formik
           initialValues={{ txHash: "", customMessage: "" }}

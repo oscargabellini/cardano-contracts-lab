@@ -58,3 +58,14 @@ export async function getUtxoByTxHash(txHash: string): Promise<UTxO> {
   }
   return utxos[0];
 }
+
+export async function getScriptUtxos(scriptAddr: string): Promise<UTxO[]> {
+  try {
+    const utxos = await blockchainProvider.fetchAddressUTxOs(scriptAddr);
+
+    return utxos;
+  } catch (error) {
+    console.error("Error fetching script UTXOs:", error);
+    throw new Error(`Failed to fetch UTXOs for script address: ${scriptAddr}`);
+  }
+}

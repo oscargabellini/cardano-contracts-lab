@@ -7,10 +7,7 @@ type TransactionDetailProps = {
   onCloseDetail: () => void;
 };
 
-export const TransactionDetail = ({
-  txHash,
-  onCloseDetail,
-}: TransactionDetailProps) => {
+export const TransactionDetail = (props: TransactionDetailProps) => {
   const { toast } = useToast();
   return (
     <>
@@ -20,16 +17,20 @@ export const TransactionDetail = ({
             <p className="text-base font-medium text-primary dark:text-primary-foreground ">
               Transaction Details
             </p>
+
             <div className="flex justify-end">
-              <Button variant="secondary" size="icon" onClick={onCloseDetail}>
+              <Button
+                variant="secondary"
+                size="icon"
+                onClick={props.onCloseDetail}
+              >
                 <XIcon />
               </Button>
             </div>
           </div>
-
           <div className="p-3 bg-secondary/20 rounded-md dark:bg-secondary/30 border border-secondary/30 dark:border-secondary/50">
             <p className="text-xs text-secondary-foreground font-mono break-all">
-              {txHash}
+              {props.txHash}
             </p>
           </div>
           <div className="flex justify-between items-center mt-2">
@@ -37,7 +38,7 @@ export const TransactionDetail = ({
               variant="secondary"
               className="text-xs px-3 py-1 bg-primary/20 dark:bg-primary/40 rounded-full"
               onClick={() => {
-                navigator.clipboard.writeText(txHash);
+                navigator.clipboard.writeText(props.txHash);
                 toast({
                   title: "Transaction hash copied to clipboard",
                   variant: "success",
@@ -48,7 +49,7 @@ export const TransactionDetail = ({
             </Button>
             <Button variant="link">
               <a
-                href={`https://preprod.cexplorer.io/tx/${txHash}`}
+                href={`https://preprod.cexplorer.io/tx/${props.txHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 text-sm text-primary/100 hover:text-primary/100 transition-colors"

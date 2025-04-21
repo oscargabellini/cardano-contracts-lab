@@ -1,6 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "../../components/ui/button";
+import { PageContainer } from "../../components/ui/page-container";
 import { LockCard } from "./lock-card";
 import { UnlockCard } from "./unlock-card";
 
@@ -8,7 +9,7 @@ export const UnlockFundsPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="container mx-auto p-6">
+    <PageContainer>
       <Button
         variant="link"
         className="text-secondary-foreground"
@@ -20,6 +21,6 @@ export const UnlockFundsPage = () => {
         <LockCard />
         <UnlockCard />
       </div>
-    </div>
+    </PageContainer>
   );
 };

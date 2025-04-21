@@ -5,6 +5,9 @@ import {
 } from "@tanstack/react-router";
 import { RootLayout } from "../../components/common/root-layout";
 import { HomePage } from "../../pages/home";
+import { AddQuestionForm } from "../../pages/quiz/forms/add-question-form";
+import { QuestionList } from "../../pages/quiz/question-list";
+import { QuizPage } from "../../pages/quiz/quiz.page";
 import { UnlockFundsPage } from "../../pages/unlock-assets/unlock-funds.page";
 import { UnlockFundsWithCustomMessagePage } from "../../pages/unlock-with-custom-message/unlock-with-custom-message.page";
 
@@ -30,10 +33,29 @@ const customMessageRoute = createRoute({
   component: UnlockFundsWithCustomMessagePage,
 });
 
+const quizRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/quiz",
+  component: QuizPage,
+});
+
+const addQuestionRoute = createRoute({
+  getParentRoute: () => quizRoute,
+  path: "add-question",
+  component: AddQuestionForm,
+});
+
+const selectQuestionRoute = createRoute({
+  getParentRoute: () => quizRoute,
+  path: "select-question",
+  component: QuestionList,
+});
+
 const routeTree = rootRoute.addChildren([
   homeRoute,
   unlockFundsRoute,
   customMessageRoute,
+  quizRoute.addChildren([addQuestionRoute, selectQuestionRoute]),
 ]);
 
 export const router = createRouter({ routeTree });

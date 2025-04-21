@@ -1,6 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "../../components/ui/button";
+import { PageContainer } from "../../components/ui/page-container";
 import { LockCardWithCustomMessage } from "./lock-card";
 import { UnlockCardWithCustomMessage } from "./unlock-card";
 
@@ -8,7 +9,7 @@ export const UnlockFundsWithCustomMessagePage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="container mx-auto p-6">
+    <PageContainer>
       <Button
         variant="link"
         className="text-secondary-foreground"
@@ -20,6 +21,6 @@ export const UnlockFundsWithCustomMessagePage = () => {
         <LockCardWithCustomMessage />
         <UnlockCardWithCustomMessage />
       </div>
-    </div>
+    </PageContainer>
   );
 };

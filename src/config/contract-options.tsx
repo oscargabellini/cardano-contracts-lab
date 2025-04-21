@@ -1,4 +1,4 @@
-import { FileTextIcon, KeyIcon } from "lucide-react";
+import { FileQuestionIcon, FileTextIcon, KeyIcon } from "lucide-react";
 
 export type ContractOption = {
   title: string;
@@ -21,5 +21,12 @@ export const contractOptions: ContractOption[] = [
       "Enhanced security: lock your ADA with a custom message that must be provided exactly to release funds",
     navigateTo: "/unlock-funds-with-custom-message",
     icon: <FileTextIcon className="w-5 h-5" />,
+  },
+  {
+    title: "Quiz",
+    description:
+      "A smart contract that enables on-chain quiz games where users can lock ADA as prizes, create questions with hashed answers, and reward correct submissions with the locked funds.",
+    navigateTo: "/quiz",
+    icon: <FileQuestionIcon className="w-5 h-5" />,
   },
 ];

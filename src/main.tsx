@@ -1,5 +1,4 @@
 import { Buffer } from "buffer";
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { Toaster } from "./components/ui/toast/toaster.tsx";
@@ -9,10 +8,10 @@ window.global = window;
 globalThis.Buffer = Buffer;
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <ThemeProvider defaultTheme="system" enableSystem attribute="class">
-      <App />
-      <Toaster />
-    </ThemeProvider>
-  </StrictMode>
+  // <StrictMode>
+  <ThemeProvider defaultTheme="system" enableSystem attribute="class">
+    <App />
+    <Toaster />
+  </ThemeProvider>
+  // </StrictMode>
 );

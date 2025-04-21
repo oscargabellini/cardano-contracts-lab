@@ -65,7 +65,7 @@ export const UnlockCard = () => {
   return (
     <TransactionCard
       title="Unlock Funds"
-      icon={<UnlockIcon className="w-5 h-5 text-primary/100" />}
+      icon={<UnlockIcon className="w-4 h-4" />}
       isTransactionDetailOpen={isTransactionDetailOpen}
       transactionDetail={
         <TransactionDetail
@@ -126,8 +126,6 @@ const getErrorMessage = (error: any, walletName?: string) => {
   const errorInfo = error.info;
   const errorMessage = error.message;
   let errorObj: any = {};
-
-  console.log(error);
 
   if (typeof error === "string") {
     try {

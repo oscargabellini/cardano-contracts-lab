@@ -26,7 +26,9 @@ validator quiz {
     expect Some(datum) = datum_opt
     let answer_is_correct = hash_answer(redeemer.answer) == datum.answer_hash
 
-    answer_is_correct
+    let answer_not_empty = redeemer.answer != ""
+
+    answer_is_correct && answer_not_empty
   }
 
   else(_) {

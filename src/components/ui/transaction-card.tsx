@@ -19,16 +19,14 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
   className = "",
 }) => {
   return (
-    <div className="flex justify-center w-full my-8">
+    <div className="flex justify-center w-full">
       <Card className={`w-full border overflow-hidden shadow-md ${className}`}>
-        <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10 border-b ">
+        <CardHeader className="bg-primary/10 border-b">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/20 dark:bg-primary/30 rounded-full">
+            <div className="p-3 rounded-full bg-primary/80 dark:bg-primary/50 text-primary-foreground">
               {icon}
             </div>
-            <CardTitle className="text-xl text-primary-foreground">
-              {title}
-            </CardTitle>
+            <CardTitle className="text-xl font-medium">{title}</CardTitle>
           </div>
         </CardHeader>
 
