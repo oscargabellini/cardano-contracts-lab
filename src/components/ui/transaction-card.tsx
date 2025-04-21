@@ -21,7 +21,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
   return (
     <div className="flex justify-center w-full">
       <Card className={`w-full border overflow-hidden shadow-md ${className}`}>
-        <CardHeader className="bg-primary/10 border-b">
+        <CardHeader className="bg-primary/10">
           <div className="flex items-center gap-3">
             <div className="p-3 rounded-full bg-primary/80 dark:bg-primary/50 text-primary-foreground">
               {icon}
