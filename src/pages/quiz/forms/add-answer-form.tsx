@@ -1,6 +1,6 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
-import { HelpCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { TransactionDetail } from "../../../components/features/transaction-detail";
 import { ActionButton } from "../../../components/ui/action-button";
@@ -63,7 +63,7 @@ export const AddAnswerForm = (props: AnswerCardProps) => {
   return (
     <TransactionCard
       title="Answer Question"
-      icon={<HelpCircle className="h-4 w-4" />}
+      icon={<CheckCircle className="h-4 w-4" />}
       isTransactionDetailOpen={isTransactionDetailOpen}
       transactionDetail={
         <TransactionDetail

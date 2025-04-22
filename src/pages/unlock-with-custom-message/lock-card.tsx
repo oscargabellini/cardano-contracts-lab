@@ -1,6 +1,6 @@
 import { useWallet } from "@meshsdk/react";
 import { Form, Formik } from "formik";
-import { LockIcon } from "lucide-react";
+import { MessageSquareLock } from "lucide-react";
 import { useState } from "react";
 import * as Yup from "yup";
 import { TransactionDetail } from "../../components/features/transaction-detail";
@@ -59,8 +59,8 @@ export const LockCardWithCustomMessage = () => {
 
   return (
     <TransactionCard
-      title="Lock Funds"
-      icon={<LockIcon className="w-4 h-4" />}
+      title="Lock with Message"
+      icon={<MessageSquareLock className="w-4 h-4" />}
       isTransactionDetailOpen={isTransactionDetailOpen}
       transactionDetail={
         <TransactionDetail

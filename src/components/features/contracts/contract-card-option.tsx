@@ -1,40 +1,44 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ContractOption } from "../../../config/contract-options";
+import { Button } from "../../ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "../../ui/card";
 
 interface ContractOptionCardProps {
-  option: ContractOption;
+  contract: ContractOption;
 }
 
-export const ContractOptionCard = ({ option }: ContractOptionCardProps) => {
+export const ContractOptionCard = ({ contract }: ContractOptionCardProps) => {
   const navigate = useNavigate();
 
   return (
     <Card
-      className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:bg-primary/5 border-primary/10"
-      onClick={() => navigate({ to: option.navigateTo })}
+      key={contract.title}
+      className="flex flex-col card-hover border-2 border-border/50"
     >
-      <CardHeader className="pb-2 flex flex-row items-center gap-4">
-        <div className="p-3 rounded-full bg-primary/80 dark:bg-primary/50 text-primary-foreground">
-          {option.icon}
+      <CardHeader>
+        <div className="flex justify-center mb-4 bg-primary/10 p-4 rounded-full w-20 h-20 mx-auto">
+          {contract.icon}
         </div>
-        <div>
-          <CardTitle className="text-xl font-semibold">
-            {option.title}
-          </CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent className="pt-3 pb-5">
-        <CardDescription className="text-sm text-secondary-foreground leading-relaxed">
-          {option.description}
+        <CardTitle className="text-xl">{contract.title}</CardTitle>
+        <CardDescription className="text-base">
+          {contract.description}
         </CardDescription>
-      </CardContent>
+      </CardHeader>
+      <CardFooter className="mt-auto pt-6">
+        <Button
+          size="lg"
+          className="w-full"
+          onClick={() => navigate({ to: contract.navigateTo })}
+        >
+          Try it out
+        </Button>
+      </CardFooter>
     </Card>
   );
 };

@@ -1,4 +1,4 @@
-import { HelpCircle, PlusCircle } from "lucide-react";
+import { CheckCircle, PlusCircle } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -72,7 +72,7 @@ export const AnswerCard = (props: CardProps) => {
     <QuizOptionCard
       title="Answer Question"
       description="Find a quiz and submit your answer to win"
-      icon={<HelpCircle className="h-5 w-5" />}
+      icon={<CheckCircle className="h-5 w-5" />}
       onClick={props.onClick}
       isActive={props.isActive}
     />

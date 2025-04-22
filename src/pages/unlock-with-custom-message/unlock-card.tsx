@@ -71,7 +71,7 @@ export const UnlockCardWithCustomMessage = () => {
 
   return (
     <TransactionCard
-      title="Unlock Funds"
+      title="Unlock with Message"
       icon={<UnlockIcon className="w-4 h-4" />}
       isTransactionDetailOpen={isTransactionDetailOpen}
       transactionDetail={
