@@ -1,40 +1,8 @@
 import { AnyFieldApi } from "@tanstack/react-form";
-import { ErrorMessage, useField } from "formik";
 import { cn } from "../../../lib/common/utils";
 import { Input } from "./input";
 
 type InputFieldProps = {
-  name: string;
-  label: string;
-  type?: "text" | "number";
-  placeholder: string;
-} & React.ComponentProps<typeof Input>;
-
-export const InputField = (props: InputFieldProps) => {
-  const [field, meta] = useField(props);
-  return (
-    <div>
-      <Input
-        type={props.type || "text"}
-        {...props}
-        {...field}
-        className={cn(
-          "py-1 pl-1 pr-1 text-sm transition-colors",
-          meta.touched && meta.error
-            ? "!border-destructive  focus:!ring-destructive "
-            : "border border-secondary/30 dark:border-secondary/50"
-        )}
-        onChange={(e: any) => field.onChange(e)}
-        onBlur={field.onBlur}
-      />
-      <div className="text-sm text-destructive mt-1">
-        <ErrorMessage name={props.name} />
-      </div>
-    </div>
-  );
-};
-
-type InputFieldTanstackProps = {
   label: string;
   name: string;
   placeholder: string;
@@ -42,7 +10,7 @@ type InputFieldTanstackProps = {
   validate?: boolean;
 } & React.ComponentProps<typeof Input>;
 
-export const InputFieldTanstack = (props: InputFieldTanstackProps) => {
+export const InputField = (props: InputFieldProps) => {
   const { label, name, placeholder, field, ...rest } = props;
 
   return (

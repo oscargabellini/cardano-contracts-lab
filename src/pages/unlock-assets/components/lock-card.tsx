@@ -1,8 +1,7 @@
 import { useWallet } from "@meshsdk/react";
-import { Form, Formik } from "formik";
+import { useForm } from "@tanstack/react-form";
 import { LockIcon } from "lucide-react";
 import { useState } from "react";
-import * as Yup from "yup";
 import { TransactionDetail } from "../../../components/features/transaction-detail";
 import { ActionButton } from "../../../components/ui/action-button";
 import { AlertBox } from "../../../components/ui/alert-box";
@@ -12,10 +11,6 @@ import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet";
 import { lockAsset } from "../../../lib/cardano/unlock-assets/lock-assets";
 
-type LockFormValues = {
-  amount: number;
-};
-
 export const LockCard = () => {
   const { connected, wallet } = useWallet();
   const { toast } = useToast();
@@ -23,34 +18,41 @@ export const LockCard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isTransactionDetailOpen, setIsTransactionDetailOpen] =
     useState<boolean>(false);
+  const [showForm, setShowForm] = useState<boolean>(true);
 
   const [txHash, setTxHash] = useState<string>("");
 
-  const handleLock = async (values: LockFormValues) => {
-    try {
-      setIsLoading(true);
-      const txHash = await lockAsset(wallet, [
-        { unit: "lovelace", quantity: String(values.amount * 1000000) },
-      ]);
-      setTxHash(txHash);
+  const form = useForm({
+    defaultValues: {
+      amount: "",
+    },
+    onSubmit: async ({ value }) => {
+      try {
+        setIsLoading(true);
+        const txHash = await lockAsset(wallet, [
+          { unit: "lovelace", quantity: String(+value.amount * 1000000) },
+        ]);
+        setTxHash(txHash);
 
-      toast({
-        title: "Transaction submitted successfully",
-        variant: "success",
-      });
+        toast({
+          title: "Transaction submitted successfully",
+          variant: "success",
+        });
 
-      setIsTransactionDetailOpen(true);
-    } catch (error: any) {
-      toast({
-        title: "Transaction failed",
-        description: error.info || error.message,
-        variant: "destructive",
-      });
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        setIsTransactionDetailOpen(true);
+        setShowForm(false);
+      } catch (error: any) {
+        toast({
+          title: "Transaction failed",
+          description: error.info || error.message,
+          variant: "destructive",
+        });
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+  });
 
   return (
     <TransactionCard
@@ -60,7 +62,11 @@ export const LockCard = () => {
       transactionDetail={
         <TransactionDetail
           txHash={txHash}
-          onCloseDetail={() => setIsTransactionDetailOpen(false)}
+          onCloseDetail={() => {
+            setIsTransactionDetailOpen(false);
+            setShowForm(true);
+            form.reset();
+          }}
         />
       }
     >
@@ -69,38 +75,49 @@ export const LockCard = () => {
           Enter the amount of ADA you want to lock on the blockchain.
         </AlertBox>
 
-        <Formik
-          enableReinitialize
-          initialValues={{
-            amount: 0,
-          }}
-          onSubmit={(values, formContext) => {
-            handleLock(values);
-            formContext.resetForm();
-          }}
-          validationSchema={Yup.object().shape({
-            amount: Yup.number()
-              .required("Amount is required")
-              .min(2, "Amount must be greater than or equal to 2"),
-          })}
-        >
-          {() => {
-            return (
-              <>
-                <Form>
-                  <InputField
-                    name="amount"
-                    id="amount"
-                    label="Amount"
-                    type="number"
-                    placeholder="Enter the amount here..."
-                    disabled={isLoading}
-                  />
+        {showForm && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              form.handleSubmit();
+            }}
+          >
+            <div className="flex flex-col gap-4">
+              <form.Field
+                name="amount"
+                validators={{
+                  onChange: ({ value }) => {
+                    if (!value.trim()) return "Amount is required";
+                    const numValue = Number(value);
+                    if (numValue < 2)
+                      return "Amount must be greater than or equal to 2";
+                    return undefined;
+                  },
+                }}
+                children={(field) => {
+                  return (
+                    <InputField
+                      label="Amount"
+                      name={field.name}
+                      type="number"
+                      placeholder="Enter the amount here..."
+                      field={field}
+                      disabled={isLoading}
+                    />
+                  );
+                }}
+              />
+
+              <form.Subscribe
+                selector={(state) => [state.canSubmit, state.isSubmitting]}
+                children={([canSubmit, isSubmitting]) => (
                   <div className="flex justify-end w-full mt-4">
                     {connected ? (
                       <ActionButton
                         type="submit"
-                        isLoading={isLoading}
+                        isLoading={isLoading || isSubmitting}
+                        disabled={!canSubmit}
                         variant="primary"
                       >
                         Lock Funds
@@ -109,11 +126,11 @@ export const LockCard = () => {
                       <WalletButton />
                     )}
                   </div>
-                </Form>
-              </>
-            );
-          }}
-        </Formik>
+                )}
+              />
+            </div>
+          </form>
+        )}
       </div>
     </TransactionCard>
   );

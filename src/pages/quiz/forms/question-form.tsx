@@ -4,7 +4,7 @@ import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { QuizTransactionDetail } from "../../../components/features/quiz-transaction-detail";
 import { ActionButton } from "../../../components/ui/action-button";
-import { InputFieldTanstack } from "../../../components/ui/input/input-field";
+import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet";
@@ -86,7 +86,7 @@ export const AddQuestionForm = () => {
                 }}
                 children={(field) => {
                   return (
-                    <InputFieldTanstack
+                    <InputField
                       label="Amount"
                       name={field.name}
                       type="number"
@@ -104,7 +104,7 @@ export const AddQuestionForm = () => {
                 }}
                 children={(field) => {
                   return (
-                    <InputFieldTanstack
+                    <InputField
                       label="Question"
                       name={field.name}
                       type="textarea"
@@ -122,7 +122,7 @@ export const AddQuestionForm = () => {
                 }}
                 children={(field) => {
                   return (
-                    <InputFieldTanstack
+                    <InputField
                       label="Answer"
                       name={field.name}
                       placeholder="Enter answer"

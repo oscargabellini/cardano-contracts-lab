@@ -1,8 +1,7 @@
 import { useWallet } from "@meshsdk/react";
-import { Form, Formik } from "formik";
+import { useForm } from "@tanstack/react-form";
 import { UnlockIcon } from "lucide-react";
 import { useState } from "react";
-import * as Yup from "yup";
 import { TransactionDetail } from "../../../components/features/transaction-detail";
 import { ActionButton } from "../../../components/ui/action-button";
 import { AlertBox } from "../../../components/ui/alert-box";
@@ -21,47 +20,54 @@ export const UnlockCard = () => {
     useState<boolean>(false);
   const [txHash, setTxHash] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showForm, setShowForm] = useState<boolean>(true);
 
-  const handleUnlock = async (values: { txHash: string }) => {
-    if (isLoading) return;
+  const form = useForm({
+    defaultValues: {
+      txHash: "",
+    },
+    onSubmit: async ({ value }) => {
+      if (isLoading) return;
 
-    try {
-      setIsLoading(true);
+      try {
+        setIsLoading(true);
 
-      const utxo = await getUtxoByTxHash(values.txHash);
-      if (!utxo) {
+        const utxo = await getUtxoByTxHash(value.txHash);
+        if (!utxo) {
+          toast({
+            title: "Transaction not found",
+            description: "Please check the transaction hash and try again.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        const unsignedTx = await buildUnlockTx(utxo, wallet);
+
+        const signedTx = await wallet.signTx(unsignedTx, true);
+        const submittedTxHash = await wallet.submitTx(signedTx);
+
+        setTxHash(submittedTxHash);
+        setIsTransactionDetailOpen(true);
+        setShowForm(false);
+
         toast({
-          title: "Transaction not found",
-          description: "Please check the transaction hash and try again.",
+          title: "Transaction submitted successfully",
+          description: `Funds unlocked successfully. Soon you will receive your funds back.`,
+          variant: "success",
+        });
+      } catch (error: any) {
+        toast({
+          title: "Transaction failed",
+          description: getErrorMessage(error, walletName),
           variant: "destructive",
         });
-        return;
+        console.error("Unlock error:", error);
+      } finally {
+        setIsLoading(false);
       }
-
-      const unsignedTx = await buildUnlockTx(utxo, wallet);
-
-      const signedTx = await wallet.signTx(unsignedTx, true);
-      const txHash = await wallet.submitTx(signedTx);
-
-      setTxHash(txHash);
-      setIsTransactionDetailOpen(true);
-
-      toast({
-        title: "Transaction submitted successfully",
-        description: `Funds unlocked successfully. Soon you will receive your funds back.`,
-        variant: "success",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Transaction failed",
-        description: getErrorMessage(error, walletName),
-        variant: "destructive",
-      });
-      console.error("Unlock error:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+  });
 
   return (
     <TransactionCard
@@ -71,7 +77,11 @@ export const UnlockCard = () => {
       transactionDetail={
         <TransactionDetail
           txHash={txHash}
-          onCloseDetail={() => setIsTransactionDetailOpen(false)}
+          onCloseDetail={() => {
+            setIsTransactionDetailOpen(false);
+            setShowForm(true);
+            form.reset();
+          }}
         />
       }
     >
@@ -80,44 +90,59 @@ export const UnlockCard = () => {
           Enter the transaction hash to retrieve your locked funds from the
           blockchain.
         </AlertBox>
-        <Formik
-          initialValues={{ txHash: "" }}
-          onSubmit={(values, formContext) => {
-            handleUnlock(values);
-            formContext.resetForm();
-          }}
-          validationSchema={Yup.object().shape({
-            txHash: Yup.string().required("Transaction hash is required"),
-          })}
-        >
-          {() => {
-            return (
-              <Form className="flex flex-col h-full">
-                <InputField
-                  name="txHash"
-                  id="txHash"
-                  label="Transaction Hash"
-                  disabled={isLoading}
-                  placeholder="Enter the transaction hash here..."
-                  autoComplete="off"
-                />
-                <div className="flex justify-end w-full mt-4">
-                  {connected ? (
-                    <ActionButton
-                      type="submit"
-                      isLoading={isLoading}
-                      variant="primary"
-                    >
-                      Unlock Funds
-                    </ActionButton>
-                  ) : (
-                    <WalletButton />
-                  )}
-                </div>
-              </Form>
-            );
-          }}
-        </Formik>
+
+        {showForm && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              form.handleSubmit();
+            }}
+            className="flex flex-col h-full"
+          >
+            <div className="flex flex-col gap-4">
+              <form.Field
+                name="txHash"
+                validators={{
+                  onChange: ({ value }) =>
+                    !value.trim() ? "Transaction hash is required" : undefined,
+                }}
+                children={(field) => {
+                  return (
+                    <InputField
+                      label="Transaction Hash"
+                      name={field.name}
+                      placeholder="Enter the transaction hash here..."
+                      field={field}
+                      disabled={isLoading}
+                      autoComplete="off"
+                    />
+                  );
+                }}
+              />
+
+              <form.Subscribe
+                selector={(state) => [state.canSubmit, state.isSubmitting]}
+                children={([canSubmit, isSubmitting]) => (
+                  <div className="flex justify-end w-full mt-4">
+                    {connected ? (
+                      <ActionButton
+                        type="submit"
+                        isLoading={isLoading || isSubmitting}
+                        disabled={!canSubmit}
+                        variant="primary"
+                      >
+                        Unlock Funds
+                      </ActionButton>
+                    ) : (
+                      <WalletButton />
+                    )}
+                  </div>
+                )}
+              />
+            </div>
+          </form>
+        )}
       </div>
     </TransactionCard>
   );
@@ -145,14 +170,14 @@ const getErrorMessage = (error: any, walletName?: string) => {
         return "You have not the access to unlock this funds.";
       }
       if (
-        errorObj.data.message &&
+        errorObj.data?.message &&
         errorObj.data.message.includes(
           "The requested component has not been found."
         )
       ) {
         return "Transaction not found with the provided hash.";
       }
-      return errorInfo || errorMessage || errorObj.data.message;
+      return errorInfo || errorMessage || errorObj.data?.message;
 
     case "eternl":
       if (
@@ -164,7 +189,7 @@ const getErrorMessage = (error: any, walletName?: string) => {
         return "You have not the access to unlock this funds.";
       }
       if (
-        errorObj.data.message &&
+        errorObj.data?.message &&
         errorObj.data.message.includes(
           "The requested component has not been found."
         )

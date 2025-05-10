@@ -17,7 +17,7 @@ import {
   getAvailableQuestions,
   Question,
 } from "../../lib/cardano/quiz/utils/get-questions";
-import { AddAnswerForm } from "./forms/add-answer-form";
+import { AddAnswerForm } from "./forms/answer-form";
 
 export const QuestionList = () => {
   const [quizzes, setQuizzes] = useState<Question[] | null>(null);
