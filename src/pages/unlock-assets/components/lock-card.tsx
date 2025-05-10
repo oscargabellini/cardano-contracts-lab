@@ -3,14 +3,14 @@ import { Form, Formik } from "formik";
 import { LockIcon } from "lucide-react";
 import { useState } from "react";
 import * as Yup from "yup";
-import { TransactionDetail } from "../../components/features/transaction-detail";
-import { ActionButton } from "../../components/ui/action-button";
-import { AlertBox } from "../../components/ui/alert-box";
-import { InputField } from "../../components/ui/input/input-field";
-import { useToast } from "../../components/ui/toast";
-import { TransactionCard } from "../../components/ui/transaction-card";
-import { WalletButton } from "../../components/ui/wallet";
-import { lockAsset } from "../../lib/cardano/unlock-assets/lock-assets";
+import { TransactionDetail } from "../../../components/features/transaction-detail";
+import { ActionButton } from "../../../components/ui/action-button";
+import { AlertBox } from "../../../components/ui/alert-box";
+import { InputField } from "../../../components/ui/input/input-field";
+import { useToast } from "../../../components/ui/toast";
+import { TransactionCard } from "../../../components/ui/transaction-card";
+import { WalletButton } from "../../../components/ui/wallet";
+import { lockAsset } from "../../../lib/cardano/unlock-assets/lock-assets";
 
 type LockFormValues = {
   amount: number;

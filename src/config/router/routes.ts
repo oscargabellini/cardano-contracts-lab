@@ -5,11 +5,11 @@ import {
 } from "@tanstack/react-router";
 import { RootLayout } from "../../components/common/root-layout";
 import { HomePage } from "../../pages/home";
+import { MessageVerifiedUnlockPage } from "../../pages/message-verified-unlock/message-verified-unlock.page";
 import { AddQuestionForm } from "../../pages/quiz/forms/add-question-form";
 import { QuestionList } from "../../pages/quiz/question-list";
 import { QuizPage } from "../../pages/quiz/quiz.page";
 import { UnlockFundsPage } from "../../pages/unlock-assets/unlock-funds.page";
-import { UnlockFundsWithCustomMessagePage } from "../../pages/unlock-with-custom-message/unlock-with-custom-message.page";
 
 const rootRoute = createRootRoute({
   component: RootLayout,
@@ -29,8 +29,8 @@ const unlockFundsRoute = createRoute({
 
 const customMessageRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/unlock-funds-with-custom-message",
-  component: UnlockFundsWithCustomMessagePage,
+  path: "/message-verified-unlock",
+  component: MessageVerifiedUnlockPage,
 });
 
 const quizRoute = createRoute({

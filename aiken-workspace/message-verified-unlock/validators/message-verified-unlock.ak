@@ -14,7 +14,7 @@ pub type Redeemer {
   msg: ByteArray,
 }
 
-validator unlock {
+validator message_verified_unlock {
   spend(
     datum_opt: Option<Datum>,
     redeemer: Redeemer,

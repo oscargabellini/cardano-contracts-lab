@@ -5,7 +5,7 @@ import {
   stringToHex,
   UTxO,
 } from "@meshsdk/core";
-import blueprint from "../../../../aiken-workspace/unlock-with-custom-message/plutus.json";
+import blueprint from "../../../../aiken-workspace/message-verified-unlock/plutus.json";
 import {
   getScript,
   getTxBuilder,

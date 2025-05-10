@@ -13,10 +13,10 @@ import {
 } from "../../components/ui/accordion";
 import { Button } from "../../components/ui/button";
 import { PageContainer } from "../../components/ui/page-container";
-import { LockCardWithCustomMessage } from "./lock-card";
-import { UnlockCardWithCustomMessage } from "./unlock-card";
+import { MessageVerifiedLockCard } from "./components/lock-card";
+import { MessageVerifiedUnlockCard } from "./components/unlock-card";
 
-export const UnlockFundsWithCustomMessagePage = () => {
+export const MessageVerifiedUnlockPage = () => {
   const navigate = useNavigate();
 
   return (
@@ -32,8 +32,8 @@ export const UnlockFundsWithCustomMessagePage = () => {
       <div className="flex flex-col gap-6">
         <HowItWorks />
         <div className="flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-20">
-          <LockCardWithCustomMessage />
-          <UnlockCardWithCustomMessage />
+          <MessageVerifiedLockCard />
+          <MessageVerifiedUnlockCard />
         </div>
       </div>
     </PageContainer>

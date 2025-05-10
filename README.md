@@ -1,21 +1,14 @@
-# Cardano Locker
+# Cardano Contracts Lab
 
-A web application for locking and unlocking funds on the Cardano blockchain using smart contracts.
-
-## Features
-
-- Connect to Cardano wallets (Lace, Eternl, etc.)
-- Lock funds on the Cardano blockchain
-- Unlock funds using transaction hash verification
-- Lock funds with custom messages for enhanced security
-- Modern UI with dark/light theme support
+A web application for experimenting with smart contracts on the Cardano blockchain.
 
 ## Smart Contracts
 
-The application includes two main smart contracts:
+The application includes the following smart contracts:
 
 1. **Basic Lock/Unlock**: Simple contract to lock and unlock funds
-2. **Custom Message Lock/Unlock**: Contract that requires a specific message to unlock funds
+2. **Message-Verified Unlock**: Contract that requires a specific message to unlock funds
+3. **Quiz Contract**: Smart contract that handles questions and rewards for correct answers
 
 All contracts are built using Aiken, a language designed for Cardano smart contracts.
 
@@ -27,6 +20,7 @@ All contracts are built using Aiken, a language designed for Cardano smart contr
 - Tailwind CSS for styling
 - Mesh SDK for Cardano blockchain integration
 - Vite for development and building
+- Radix UI components for accessible UI elements
 
 ## Getting Started
 
@@ -35,6 +29,7 @@ All contracts are built using Aiken, a language designed for Cardano smart contr
 - Node.js (v18 or higher)
 - npm or yarn
 - A Cardano wallet (Lace, Eternl, etc.)
+- Blockfrost API key ([Get one here](https://blockfrost.io/))
 
 ### Installation
 
@@ -57,7 +52,9 @@ npm install
 cp .env.example .env
 ```
 
-4. Start the development server
+4. Add your Blockfrost API key to the `.env` file
+
+5. Start the development server
 
 ```bash
 npm run dev
@@ -78,21 +75,11 @@ The built application will be in the `dist` directory.
 - `src/`: Source code
   - `assets/`: Images, fonts, and other static resources
   - `components/`: UI components
-    - `common/`: Shared components like layout, navbar
-    - `features/`: Feature-specific components
-    - `ui/`: Reusable UI elements (buttons, cards, inputs)
   - `config/`: Application configuration and constants
   - `hooks/`: Custom React hooks
   - `lib/`: Utilities and helpers
-    - `cardano/`: Cardano blockchain interaction code
-    - `utils/`: General utility functions
-  - `pages/`: Application pages
-    - `home/`: Home page
-    - `lock/`: Lock funds pages
-    - `unlock/`: Unlock funds pages
+  - `pages/`:
   - `providers/`: React context providers
-  - `styles/`: Global styles
-  - `types/`: TypeScript type definitions
 
 ## Contribution
 

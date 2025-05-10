@@ -3,17 +3,17 @@ import { Form, Formik } from "formik";
 import { UnlockIcon } from "lucide-react";
 import { useState } from "react";
 import * as Yup from "yup";
-import { TransactionDetail } from "../../components/features/transaction-detail";
-import { ActionButton } from "../../components/ui/action-button";
-import { AlertBox } from "../../components/ui/alert-box";
-import { InputField } from "../../components/ui/input/input-field";
-import { toast } from "../../components/ui/toast";
-import { TransactionCard } from "../../components/ui/transaction-card";
-import { WalletButton } from "../../components/ui/wallet";
-import { getUtxoByTxHash } from "../../lib/cardano/cardano-helpers";
-import { buildUnlockTx } from "../../lib/cardano/unlock-with-custom-message/unlock-assets";
+import { TransactionDetail } from "../../../components/features/transaction-detail";
+import { ActionButton } from "../../../components/ui/action-button";
+import { AlertBox } from "../../../components/ui/alert-box";
+import { InputField } from "../../../components/ui/input/input-field";
+import { toast } from "../../../components/ui/toast";
+import { TransactionCard } from "../../../components/ui/transaction-card";
+import { WalletButton } from "../../../components/ui/wallet";
+import { getUtxoByTxHash } from "../../../lib/cardano/cardano-helpers";
+import { buildUnlockTx } from "../../../lib/cardano/message-verified-unlock/unlock-assets";
 
-export const UnlockCardWithCustomMessage = () => {
+export const MessageVerifiedUnlockCard = () => {
   const { connected, wallet, name: walletName } = useWallet();
 
   const [isTransactionDetailOpen, setIsTransactionDetailOpen] =

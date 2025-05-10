@@ -19,7 +19,7 @@ export const contractOptions: ContractOption[] = [
     title: "Message-Verified Unlock",
     description:
       "Enhanced security: lock your ADA with a custom message that must be provided exactly to release funds",
-    navigateTo: "/unlock-funds-with-custom-message",
+    navigateTo: "/message-verified-unlock",
     icon: <MessageSquareLock className="w-10 h-10 text-primary" />,
   },
   {
