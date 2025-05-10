@@ -6,8 +6,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./dropdown-menu";
-import { useToast } from "./toast";
+} from "../dropdown-menu";
+import { useToast } from "../toast";
+import "./wallet.css";
 
 export const WalletButton = () => {
   const { resolvedTheme } = useTheme();
@@ -70,15 +71,7 @@ export const WalletButton = () => {
   }
 
   return (
-    <div
-      className={`[&_.mesh-inline-flex]:inline-flex [&_.mesh-inline-flex]:items-center [&_.mesh-inline-flex]:justify-center 
-        [&_.mesh-inline-flex]:rounded-full [&_.mesh-inline-flex]:min-w-[200px] [&_.mesh-inline-flex]:text-sm [&_.mesh-inline-flex]:font-medium 
-        [&_.mesh-inline-flex]:focus-visible:outline-none [&_.mesh-inline-flex]:focus-visible:ring-2 [&_.mesh-inline-flex]:focus-visible:ring-primary 
-        [&_.mesh-inline-flex]:focus-visible:ring-offset-2 [&_.mesh-inline-flex]:disabled:pointer-events-none [&_.mesh-inline-flex]:disabled:opacity-50 
-        [&_.mesh-inline-flex]:h-9 [&_.mesh-inline-flex]:px-4 [&_.mesh-inline-flex]:py-2 [&_.mesh-inline-flex]:bg-primary 
-        [&_.mesh-inline-flex]:hover:bg-primary/90 [&_.mesh-inline-flex]:text-primary-foreground [&_.mesh-inline-flex]:transition-opacity 
-        [&_.mesh-inline-flex]:duration-300 [&_.mesh-inline-flex]:ease-in-out`}
-    >
+    <div className="custom-wallet-wrapper">
       <CardanoWallet
         isDark={resolvedTheme === "dark"}
         onConnected={onConnected}

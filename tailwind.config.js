@@ -1,14 +1,5 @@
 const { fontFamily } = require("tailwindcss/defaultTheme");
 
-const fs = require("fs");
-const path = require("path");
-
-const safelist = fs
-  .readFileSync(path.join(__dirname, "./tailwind-safelist.txt"))
-  .toString()
-  .split("\n")
-  .filter(Boolean);
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
@@ -18,7 +9,6 @@ module.exports = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
-  safelist: safelist,
   plugins: [require("tailwindcss-animate")],
   theme: {
     container: {

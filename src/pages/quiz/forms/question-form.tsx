@@ -7,7 +7,7 @@ import { ActionButton } from "../../../components/ui/action-button";
 import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
-import { WalletButton } from "../../../components/ui/wallet";
+import { WalletButton } from "../../../components/ui/wallet/wallet";
 import { addQuestion } from "../../../lib/cardano/quiz/add-question";
 
 export const AddQuestionForm = () => {

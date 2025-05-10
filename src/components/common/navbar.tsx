@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { WalletButton } from "../ui/wallet";
+import { WalletButton } from "../ui/wallet/wallet";
 
 export function Navbar() {
   const { setTheme, theme } = useTheme();

@@ -1,0 +1,18 @@
+.custom-wallet-wrapper .mesh-inline-flex {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 9999px !important;
+  min-width: 200px !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  height: 2.25rem !important;
+  padding: 0.5rem 1rem !important;
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  transition: opacity 300ms ease-in-out !important;
+}
+
+.custom-wallet-wrapper .mesh-inline-flex:hover {
+  background-color: hsl(var(--primary) / 0.9) !important;
+}
