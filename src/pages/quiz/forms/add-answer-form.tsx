@@ -14,6 +14,7 @@ import { addAnswer } from "../../../lib/cardano/quiz/add-answer";
 type AnswerCardProps = {
   question: string;
   questionHash: string;
+  onCorrectAnswer: () => void;
 };
 
 export const AddAnswerForm = (props: AnswerCardProps) => {
@@ -50,6 +51,7 @@ export const AddAnswerForm = (props: AnswerCardProps) => {
           title: "Correct answer",
           description: `You answered correctly!`,
         });
+        props.onCorrectAnswer();
       } catch (error) {
         toast({
           variant: "destructive",

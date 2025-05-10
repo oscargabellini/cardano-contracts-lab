@@ -58,7 +58,7 @@ type CardProps = {
 export const QuestionCard = (props: CardProps) => {
   return (
     <QuizOptionCard
-      title="Add Question"
+      title="Create a Quiz"
       description="Create a new quiz with a prize for the correct answer"
       icon={<PlusCircle className="h-5 w-5" />}
       onClick={props.onClick}
@@ -70,8 +70,8 @@ export const QuestionCard = (props: CardProps) => {
 export const AnswerCard = (props: CardProps) => {
   return (
     <QuizOptionCard
-      title="Answer Question"
-      description="Find a quiz and submit your answer to win"
+      title="Answer a Quiz"
+      description="Answer a quiz and win a prize"
       icon={<CheckCircle className="h-5 w-5" />}
       onClick={props.onClick}
       isActive={props.isActive}

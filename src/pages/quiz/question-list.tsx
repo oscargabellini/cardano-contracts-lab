@@ -7,6 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "../../components/ui/dialog";
 import { getScript } from "../../lib/cardano/cardano-helpers";
 import {
   getAvailableQuestions,
@@ -54,37 +59,65 @@ export const QuestionList = () => {
         <div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {quizzes?.map((quiz) => (
-              <div key={quiz.id} className="flex flex-col gap-4">
-                <Card
-                  className={`cursor-pointer transition-colors ${
-                    selectedQuizId === quiz.id
-                      ? "bg-primary/20 border-primary shadow-sm"
-                      : "hover:bg-primary/10"
-                  }`}
-                  onClick={() => handleQuizClick(quiz)}
-                >
-                  <CardHeader className="flex flex-col justify-between h-28">
-                    <CardTitle className="font-medium">
-                      {quiz.question}
-                    </CardTitle>
-                    <CardDescription className="text-right">
-                      {quiz.valueFormatted}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              </div>
+              <Dialog
+                onOpenChange={(open) => {
+                  if (!open) {
+                    setSelectedQuizId(null);
+                  }
+                }}
+                key={quiz.id}
+              >
+                <DialogTrigger>
+                  <QuestionCard
+                    key={quiz.id}
+                    quiz={quiz}
+                    onClick={() => handleQuizClick(quiz)}
+                    value={quiz.valueFormatted}
+                    question={quiz.question}
+                  />
+                </DialogTrigger>
+                <DialogContent>
+                  <div className="mt-4">
+                    {selectedQuizId === selectedQuiz?.id &&
+                      selectedQuiz?.question && (
+                        <AddAnswerForm
+                          question={selectedQuiz.question}
+                          questionHash={selectedQuiz.id}
+                          onCorrectAnswer={async () => {
+                            await fetchQuestions();
+                          }}
+                        />
+                      )}
+                  </div>
+                </DialogContent>
+              </Dialog>
             ))}
-          </div>
-          <div className="mt-4">
-            {selectedQuizId === selectedQuiz?.id && selectedQuiz?.question && (
-              <AddAnswerForm
-                question={selectedQuiz.question}
-                questionHash={selectedQuiz.id}
-              />
-            )}
           </div>
         </div>
       )}
+    </div>
+  );
+};
+
+type QuestionCardProps = {
+  question: string | null;
+  value: string;
+  onClick: () => void;
+  quiz: Question;
+};
+const QuestionCard = (props: QuestionCardProps) => {
+  return (
+    <div key={props.quiz.id} className="flex flex-col gap-4">
+      <Card onClick={() => props.onClick()}>
+        <CardHeader className="flex flex-col justify-between h-28">
+          <CardTitle className="font-medium text-left">
+            {props.quiz.question}
+          </CardTitle>
+          <CardDescription className="text-lg font-semibold text-primary text-right">
+            {props.quiz.valueFormatted}
+          </CardDescription>
+        </CardHeader>
+      </Card>
     </div>
   );
 };
