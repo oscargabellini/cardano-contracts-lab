@@ -1,0 +1,85 @@
+{
+  "preamble": {
+    "title": "aiken-lang/unlock-with-custom-message",
+    "description": "Aiken contracts for project 'aiken-lang/cardano-contracts-lab'",
+    "version": "0.0.0",
+    "plutusVersion": "v3",
+    "compiler": {
+      "name": "Aiken",
+      "version": "v1.1.7+e2fb28b"
+    },
+    "license": "Apache-2.0"
+  },
+  "validators": [
+    {
+      "title": "unlock_with_password.unlock_with_password.spend",
+      "datum": {
+        "title": "datum_opt",
+        "schema": {
+          "$ref": "#/definitions/unlock_with_password~1Datum"
+        }
+      },
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/unlock_with_password~1Redeemer"
+        }
+      },
+      "compiledCode": "59010a01010032323232323225333002323232323253330073370e900118041baa0011323322533300a3370e900018059baa00513232533300f30110021533300c3370e900018069baa0031323232533300f3371e6e50dd7180118089baa00a375c6026602860226ea800c40045281991191980080080191299980a8008a501332253330143371e00400a29444cc010010004dd7180b000980b8009bac301230133013301330133013301330133013301037540146eb8c004c040dd500111809000980818071baa0031616375c601e00260186ea801458c030004c030c034004c024dd50008b1805180580198048011804001180400098021baa00114984d9595cd2ab9d5573caae7d5d0aba21",
+      "hash": "c0ff80d3995a0768ed648a1b285cedd3d12456e2fd5a7334c4c7c209"
+    },
+    {
+      "title": "unlock_with_password.unlock_with_password.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "59010a01010032323232323225333002323232323253330073370e900118041baa0011323322533300a3370e900018059baa00513232533300f30110021533300c3370e900018069baa0031323232533300f3371e6e50dd7180118089baa00a375c6026602860226ea800c40045281991191980080080191299980a8008a501332253330143371e00400a29444cc010010004dd7180b000980b8009bac301230133013301330133013301330133013301037540146eb8c004c040dd500111809000980818071baa0031616375c601e00260186ea801458c030004c030c034004c024dd50008b1805180580198048011804001180400098021baa00114984d9595cd2ab9d5573caae7d5d0aba21",
+      "hash": "c0ff80d3995a0768ed648a1b285cedd3d12456e2fd5a7334c4c7c209"
+    }
+  ],
+  "definitions": {
+    "ByteArray": {
+      "dataType": "bytes"
+    },
+    "VerificationKeyHash": {
+      "title": "VerificationKeyHash",
+      "dataType": "bytes"
+    },
+    "unlock_with_password/Datum": {
+      "title": "Datum",
+      "anyOf": [
+        {
+          "title": "Datum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "owner",
+              "$ref": "#/definitions/VerificationKeyHash"
+            },
+            {
+              "title": "password_hash",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "unlock_with_password/Redeemer": {
+      "title": "Redeemer",
+      "anyOf": [
+        {
+          "title": "Redeemer",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "password",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

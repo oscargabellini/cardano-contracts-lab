@@ -1,4 +1,4 @@
-import { FileQuestionIcon, KeyIcon, MessageSquareLock } from "lucide-react";
+import { FileQuestionIcon, KeyIcon, LockIcon } from "lucide-react";
 
 export type ContractOption = {
   title: string;
@@ -16,11 +16,11 @@ export const contractOptions: ContractOption[] = [
     icon: <KeyIcon className="w-10 h-10 text-primary" />,
   },
   {
-    title: "Message-Verified Unlock",
+    title: "Unlock with Password",
     description:
-      "Enhanced security: lock your ADA with a custom message that must be provided exactly to release funds",
-    navigateTo: "/message-verified-unlock",
-    icon: <MessageSquareLock className="w-10 h-10 text-primary" />,
+      "Enhanced security: lock your ADA with a password that must be provided exactly to release funds",
+    navigateTo: "/unlock-with-password",
+    icon: <LockIcon className="w-10 h-10 text-primary" />,
   },
   {
     title: "Quiz",

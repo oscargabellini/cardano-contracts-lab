@@ -13,10 +13,10 @@ import {
 } from "../../components/ui/accordion";
 import { Button } from "../../components/ui/button";
 import { PageContainer } from "../../components/ui/page-container";
-import { MessageVerifiedLockCard } from "./components/lock-card";
-import { MessageVerifiedUnlockCard } from "./components/unlock-card";
+import { LockWithPasswordCard } from "./components/lock-card";
+import { UnlockWithPasswordCard } from "./components/unlock-card";
 
-export const MessageVerifiedUnlockPage = () => {
+export const UnlockWithPasswordPage = () => {
   const navigate = useNavigate();
 
   return (
@@ -32,8 +32,8 @@ export const MessageVerifiedUnlockPage = () => {
       <div className="flex flex-col gap-6">
         <HowItWorks />
         <div className="flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-20">
-          <MessageVerifiedLockCard />
-          <MessageVerifiedUnlockCard />
+          <LockWithPasswordCard />
+          <UnlockWithPasswordCard />
         </div>
       </div>
     </PageContainer>
@@ -62,9 +62,9 @@ const HowItWorks = () => {
                 <MessageSquareLock className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h3 className="font-medium text-lg">Lock with Message</h3>
+                <h3 className="font-medium text-lg">Lock with Password</h3>
                 <p className="text-muted-foreground">
-                  When you lock funds with a message, the message is stored
+                  When you lock funds with a password, the password is stored
                   securely in the smart contract. This adds an extra layer of
                   security to your locked funds.
                 </p>
@@ -75,10 +75,10 @@ const HowItWorks = () => {
                 <UnlockIcon className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h3 className="font-medium text-lg">Unlock with Message</h3>
+                <h3 className="font-medium text-lg">Unlock with Password</h3>
                 <p className="text-muted-foreground">
-                  To unlock your funds, you need to provide both the Lock ID and
-                  the exact message you used when locking the funds. This
+                  To unlock your funds, you need to provide both the transaction
+                  hash and the password you used when locking the funds. This
                   ensures that only you can access your funds.
                 </p>
               </div>

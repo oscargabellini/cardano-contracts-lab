@@ -9,9 +9,9 @@ import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet/wallet";
-import { lockAsset } from "../../../lib/cardano/message-verified-unlock/lock-assets";
+import { lockAsset } from "../../../lib/cardano/unlock-with-password/lock-assets";
 
-export const MessageVerifiedLockCard = () => {
+export const LockWithPasswordCard = () => {
   const { connected, wallet } = useWallet();
   const { toast } = useToast();
 
@@ -25,7 +25,7 @@ export const MessageVerifiedLockCard = () => {
   const form = useForm({
     defaultValues: {
       amount: "",
-      message: "",
+      password: "",
     },
     onSubmit: async ({ value }) => {
       try {
@@ -34,7 +34,7 @@ export const MessageVerifiedLockCard = () => {
         const txHash = await lockAsset(
           wallet,
           [{ unit: "lovelace", quantity: String(+value.amount * 1000000) }],
-          value.message
+          value.password
         );
 
         setTxHash(txHash);
@@ -61,7 +61,7 @@ export const MessageVerifiedLockCard = () => {
 
   return (
     <TransactionCard
-      title="Lock with Message"
+      title="Lock with Password"
       icon={<MessageSquareLock className="w-4 h-4" />}
       isTransactionDetailOpen={isTransactionDetailOpen}
       transactionDetail={
@@ -116,17 +116,18 @@ export const MessageVerifiedLockCard = () => {
               />
 
               <form.Field
-                name="message"
+                name="password"
                 validators={{
                   onChange: ({ value }) =>
-                    !value.trim() ? "Message is required" : undefined,
+                    !value.trim() ? "Password is required" : undefined,
                 }}
                 children={(field) => {
                   return (
                     <InputField
-                      label="Message"
+                      label="Password"
+                      type="password"
                       name={field.name}
-                      placeholder="Enter your message here"
+                      placeholder="Enter your password here"
                       field={field}
                       autoComplete="off"
                     />

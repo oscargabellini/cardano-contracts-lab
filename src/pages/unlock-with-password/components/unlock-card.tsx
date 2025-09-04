@@ -10,9 +10,9 @@ import { toast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet/wallet";
 import { getUtxoByTxHash } from "../../../lib/cardano/cardano-helpers";
-import { buildUnlockTx } from "../../../lib/cardano/message-verified-unlock/unlock-assets";
+import { buildUnlockTx } from "../../../lib/cardano/unlock-with-password/unlock-assets";
 
-export const MessageVerifiedUnlockCard = () => {
+export const UnlockWithPasswordCard = () => {
   const { connected, wallet, name: walletName } = useWallet();
 
   const [isTransactionDetailOpen, setIsTransactionDetailOpen] =
@@ -24,7 +24,7 @@ export const MessageVerifiedUnlockCard = () => {
   const form = useForm({
     defaultValues: {
       txHash: "",
-      customMessage: "",
+      password: "",
     },
     onSubmit: async ({ value }) => {
       if (isLoading) return;
@@ -42,11 +42,7 @@ export const MessageVerifiedUnlockCard = () => {
           return;
         }
 
-        const unsignedTx = await buildUnlockTx(
-          utxo,
-          wallet,
-          value.customMessage
-        );
+        const unsignedTx = await buildUnlockTx(utxo, wallet, value.password);
 
         const signedTx = await wallet.signTx(unsignedTx, true);
         const submittedTxHash = await wallet.submitTx(signedTx);
@@ -75,7 +71,7 @@ export const MessageVerifiedUnlockCard = () => {
 
   return (
     <TransactionCard
-      title="Unlock with Message"
+      title="Unlock with Password"
       icon={<UnlockIcon className="w-4 h-4" />}
       isTransactionDetailOpen={isTransactionDetailOpen}
       transactionDetail={
@@ -91,7 +87,7 @@ export const MessageVerifiedUnlockCard = () => {
     >
       <div className="flex flex-col gap-5">
         <AlertBox variant="info">
-          Enter the transaction hash and the message to unlock your funds from
+          Enter the transaction hash and the password to unlock your funds from
           the blockchain.
         </AlertBox>
 
@@ -126,17 +122,18 @@ export const MessageVerifiedUnlockCard = () => {
               />
 
               <form.Field
-                name="customMessage"
+                name="password"
                 validators={{
                   onChange: ({ value }) =>
-                    !value.trim() ? "Message is required" : undefined,
+                    !value.trim() ? "Password is required" : undefined,
                 }}
                 children={(field) => {
                   return (
                     <InputField
-                      label="Message"
+                      label="Password"
+                      type="password"
                       name={field.name}
-                      placeholder="Enter the message to unlock the funds"
+                      placeholder="Enter the password to unlock the funds"
                       field={field}
                       disabled={isLoading}
                       autoComplete="off"

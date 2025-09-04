@@ -75,6 +75,7 @@ export const WalletButton = () => {
       <CardanoWallet
         isDark={resolvedTheme === "dark"}
         onConnected={onConnected}
+        persist={true}
       />
     </div>
   );
