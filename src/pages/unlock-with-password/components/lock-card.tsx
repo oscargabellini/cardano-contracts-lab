@@ -1,6 +1,5 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
-import { MessageSquareLock } from "lucide-react";
 import { useState } from "react";
 import { TransactionDetail } from "../../../components/features/transaction-detail";
 import { ActionButton } from "../../../components/ui/action-button";
@@ -61,8 +60,6 @@ export const LockWithPasswordCard = () => {
 
   return (
     <TransactionCard
-      title="Lock with Password"
-      icon={<MessageSquareLock className="w-4 h-4" />}
       isTransactionDetailOpen={isTransactionDetailOpen}
       transactionDetail={
         <TransactionDetail
@@ -92,7 +89,7 @@ export const LockWithPasswordCard = () => {
               <form.Field
                 name="amount"
                 validators={{
-                  onChange: ({ value }) => {
+                  onSubmit: ({ value }) => {
                     if (!value.trim()) return "Amount is required";
                     const numValue = Number(value);
                     if (numValue < 2)
@@ -118,7 +115,7 @@ export const LockWithPasswordCard = () => {
               <form.Field
                 name="password"
                 validators={{
-                  onChange: ({ value }) =>
+                  onSubmit: ({ value }) =>
                     !value.trim() ? "Password is required" : undefined,
                 }}
                 children={(field) => {

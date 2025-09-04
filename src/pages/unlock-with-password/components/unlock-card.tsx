@@ -1,6 +1,5 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
-import { UnlockIcon } from "lucide-react";
 import { useState } from "react";
 import { TransactionDetail } from "../../../components/features/transaction-detail";
 import { ActionButton } from "../../../components/ui/action-button";
@@ -71,8 +70,6 @@ export const UnlockWithPasswordCard = () => {
 
   return (
     <TransactionCard
-      title="Unlock with Password"
-      icon={<UnlockIcon className="w-4 h-4" />}
       isTransactionDetailOpen={isTransactionDetailOpen}
       transactionDetail={
         <TransactionDetail
@@ -104,7 +101,7 @@ export const UnlockWithPasswordCard = () => {
               <form.Field
                 name="txHash"
                 validators={{
-                  onChange: ({ value }) =>
+                  onSubmit: ({ value }) =>
                     !value.trim() ? "Transaction hash is required" : undefined,
                 }}
                 children={(field) => {
@@ -124,7 +121,7 @@ export const UnlockWithPasswordCard = () => {
               <form.Field
                 name="password"
                 validators={{
-                  onChange: ({ value }) =>
+                  onSubmit: ({ value }) =>
                     !value.trim() ? "Password is required" : undefined,
                 }}
                 children={(field) => {
