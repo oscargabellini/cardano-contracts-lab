@@ -5,7 +5,11 @@ import { useToast } from "../ui/toast";
 
 export type TransactionDetails = {
   txHash: string;
-  action: "Lock Funds" | "Unlock Funds";
+  action:
+    | "Lock Funds"
+    | "Unlock Funds"
+    | "Lock Funds with Password"
+    | "Unlock Funds with Password";
   amount: number;
 };
 

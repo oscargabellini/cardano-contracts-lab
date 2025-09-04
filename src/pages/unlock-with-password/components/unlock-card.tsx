@@ -2,8 +2,10 @@ import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 import { TransactionDetail } from "../../../components/features/transaction-detail";
+import { TransactionDetails } from "../../../components/features/transaction-details";
 import { ActionButton } from "../../../components/ui/action-button";
 import { AlertBox } from "../../../components/ui/alert-box";
+import { Button } from "../../../components/ui/button";
 import { InputField } from "../../../components/ui/input/input-field";
 import { toast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
@@ -11,7 +13,12 @@ import { WalletButton } from "../../../components/ui/wallet/wallet";
 import { getUtxoByTxHash } from "../../../lib/cardano/cardano-helpers";
 import { buildUnlockTx } from "../../../lib/cardano/unlock-with-password/unlock-assets";
 
-export const UnlockWithPasswordCard = () => {
+type UnlockWithPasswordCardProps = {
+  onComplete: (transactionDetails: TransactionDetails) => void;
+  onClose?: () => void;
+};
+
+export const UnlockWithPasswordCard = (props: UnlockWithPasswordCardProps) => {
   const { connected, wallet, name: walletName } = useWallet();
 
   const [isTransactionDetailOpen, setIsTransactionDetailOpen] =
@@ -49,6 +56,15 @@ export const UnlockWithPasswordCard = () => {
         setTxHash(submittedTxHash);
         setIsTransactionDetailOpen(true);
         setShowForm(false);
+        props.onComplete({
+          txHash: submittedTxHash,
+          action: "Unlock Funds with Password",
+          amount:
+            utxo.output.amount
+              .filter((asset) => asset.unit === "lovelace")
+              .reduce((sum, asset) => sum + parseInt(asset.quantity), 0) /
+            1000000,
+        });
       } catch (error: any) {
         toast({
           title: "Transaction failed",
@@ -136,7 +152,12 @@ export const UnlockWithPasswordCard = () => {
               <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => (
-                  <div className="flex justify-end w-full mt-4">
+                  <div className="flex flex-col-reverse md:flex-row gap-4 pt-2 w-full mt-4 justify-end">
+                    {props.onClose && (
+                      <Button variant="secondary" onClick={props.onClose}>
+                        Close
+                      </Button>
+                    )}
                     {connected ? (
                       <ActionButton
                         type="submit"

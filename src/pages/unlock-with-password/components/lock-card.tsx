@@ -2,15 +2,22 @@ import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 import { TransactionDetail } from "../../../components/features/transaction-detail";
+import { TransactionDetails } from "../../../components/features/transaction-details";
 import { ActionButton } from "../../../components/ui/action-button";
 import { AlertBox } from "../../../components/ui/alert-box";
+import { Button } from "../../../components/ui/button";
 import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet/wallet";
 import { lockAsset } from "../../../lib/cardano/unlock-with-password/lock-assets";
 
-export const LockWithPasswordCard = () => {
+type LockWithPasswordCardProps = {
+  onComplete: (transactionDetails: TransactionDetails) => void;
+  onClose?: () => void;
+};
+
+export const LockWithPasswordCard = (props: LockWithPasswordCardProps) => {
   const { connected, wallet } = useWallet();
   const { toast } = useToast();
 
@@ -40,6 +47,11 @@ export const LockWithPasswordCard = () => {
 
         setIsTransactionDetailOpen(true);
         setShowForm(false);
+        props.onComplete({
+          txHash,
+          action: "Lock Funds with Password",
+          amount: +value.amount,
+        });
       } catch (error: any) {
         toast({
           title: "Transaction failed",
@@ -130,7 +142,12 @@ export const LockWithPasswordCard = () => {
               <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => (
-                  <div className="flex justify-end w-full mt-4">
+                  <div className="flex flex-col-reverse md:flex-row gap-4 pt-2 w-full mt-4 justify-end">
+                    {props.onClose && (
+                      <Button variant="secondary" onClick={props.onClose}>
+                        Close
+                      </Button>
+                    )}
                     {connected ? (
                       <ActionButton
                         type="submit"
