@@ -1,17 +1,21 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
-import { LockIcon } from "lucide-react";
 import { useState } from "react";
 import { TransactionDetail } from "../../../components/features/transaction-detail";
+import { TransactionDetails } from "../../../components/features/transaction-details";
 import { ActionButton } from "../../../components/ui/action-button";
 import { AlertBox } from "../../../components/ui/alert-box";
+import { Button } from "../../../components/ui/button";
 import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet/wallet";
 import { lockAsset } from "../../../lib/cardano/unlock-assets/lock-assets";
 
-export const LockCard = () => {
+export const LockCard = (props: {
+  onComplete: (transactionDetails: TransactionDetails) => void;
+  onClose?: () => void;
+}) => {
   const { connected, wallet } = useWallet();
   const { toast } = useToast();
 
@@ -41,6 +45,11 @@ export const LockCard = () => {
 
         setIsTransactionDetailOpen(true);
         setShowForm(false);
+        props.onComplete({
+          txHash,
+          action: "Lock Funds",
+          amount: +value.amount,
+        });
       } catch (error: any) {
         toast({
           title: "Transaction failed",
@@ -56,8 +65,6 @@ export const LockCard = () => {
 
   return (
     <TransactionCard
-      title="Lock Funds"
-      icon={<LockIcon className="w-4 h-4" />}
       isTransactionDetailOpen={isTransactionDetailOpen}
       transactionDetail={
         <TransactionDetail
@@ -87,7 +94,7 @@ export const LockCard = () => {
               <form.Field
                 name="amount"
                 validators={{
-                  onChange: ({ value }) => {
+                  onSubmit: ({ value }) => {
                     if (!value.trim()) return "Amount is required";
                     const numValue = Number(value);
                     if (numValue < 2)
@@ -112,7 +119,12 @@ export const LockCard = () => {
               <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => (
-                  <div className="flex justify-end w-full mt-4">
+                  <div className="flex flex-col-reverse md:flex-row gap-4 pt-2 w-full mt-4 justify-end">
+                    {props.onClose && (
+                      <Button variant="secondary" onClick={props.onClose}>
+                        Close
+                      </Button>
+                    )}
                     {connected ? (
                       <ActionButton
                         type="submit"

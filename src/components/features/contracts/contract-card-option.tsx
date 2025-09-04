@@ -19,7 +19,8 @@ export const ContractOptionCard = ({ contract }: ContractOptionCardProps) => {
   return (
     <Card
       key={contract.title}
-      className="flex flex-col card-hover border-2 border-border/50"
+      className="flex flex-col card-hover border-2 border-border/50 cursor-pointer"
+      onClick={() => navigate({ to: contract.navigateTo })}
     >
       <CardHeader>
         <div className="flex justify-center mb-4 bg-primary/10 p-4 rounded-full w-20 h-20 mx-auto">

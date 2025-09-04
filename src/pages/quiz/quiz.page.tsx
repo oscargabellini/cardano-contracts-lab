@@ -12,8 +12,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../components/ui/accordion";
-import { Button } from "../../components/ui/button";
+import { GoBackButton } from "../../components/ui/go-back-button";
+import { Modal } from "../../components/ui/modal/modal";
 import { PageContainer } from "../../components/ui/page-container";
+import { AddQuestionForm } from "./forms/question-form";
 import { AnswerCard, QuestionCard } from "./quiz-options";
 
 export const QuizPage = () => {
@@ -22,14 +24,9 @@ export const QuizPage = () => {
 
   return (
     <PageContainer>
-      <Button
-        size="lg"
-        variant="link"
-        className="text-secondary-foreground"
-        onClick={() => navigate({ to: "/" })}
-      >
+      <GoBackButton navigateTo="/">
         <ArrowLeftIcon className="w-4 h-4" /> Select another contract
-      </Button>
+      </GoBackButton>
       <div className="flex flex-col gap-6">
         <HowItWorks />
         <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:gap-20">
@@ -38,6 +35,14 @@ export const QuizPage = () => {
             onClick={() => {
               setActiveCard("question");
               navigate({ to: "/quiz/add-question" });
+            }}
+          />
+          <CreateQuizModal
+            open={activeCard === "question"}
+            onOpenChange={(open) => {
+              if (!open) {
+                setActiveCard(undefined);
+              }
             }}
           />
           <AnswerCard
@@ -100,5 +105,23 @@ const HowItWorks = () => {
         </AccordionContent>
       </AccordionItem>
     </Accordion>
+  );
+};
+
+type CreateQuizModalProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+const CreateQuizModal = (props: CreateQuizModalProps) => {
+  return (
+    <Modal open={props.open} onOpenChange={props.onOpenChange}>
+      <Modal.Content>
+        <Modal.Header>
+          <Modal.Title>Create a Quiz</Modal.Title>
+        </Modal.Header>
+        <AddQuestionForm />
+      </Modal.Content>
+    </Modal>
   );
 };

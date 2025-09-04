@@ -1,6 +1,5 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
-import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { QuizTransactionDetail } from "../../../components/features/quiz-transaction-detail";
 import { ActionButton } from "../../../components/ui/action-button";
@@ -50,110 +49,106 @@ export const AddQuestionForm = () => {
     },
   });
   return (
-    <div className="mt-7">
-      <TransactionCard
-        title="Create a Quiz"
-        icon={<PlusCircle className="h-4 w-4" />}
-        isTransactionDetailOpen={isTransactionDetailOpen}
-        transactionDetail={
-          <QuizTransactionDetail
-            amount={form.getFieldValue("amount")}
-            question={form.getFieldValue("question")}
-            answer={form.getFieldValue("answer")}
-            txHash={txHash}
-            onCloseDetail={() => {
-              setIsTransactionDetailOpen(false);
-              setShowForm(true);
-              form.reset();
-            }}
-          />
-        }
-      >
-        {showForm && (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              form.handleSubmit();
-            }}
-          >
-            <div className="flex flex-col gap-4">
-              <form.Field
-                name="amount"
-                validators={{
-                  onChange: ({ value }) =>
-                    !value.trim() ? "An amount is required" : undefined,
-                }}
-                children={(field) => {
-                  return (
-                    <InputField
-                      label="Amount"
-                      name={field.name}
-                      type="number"
-                      placeholder="Enter amount of ADA"
-                      field={field}
-                    />
-                  );
-                }}
-              />
-              <form.Field
-                name="question"
-                validators={{
-                  onChange: ({ value }) =>
-                    !value.trim() ? "A question is required" : undefined,
-                }}
-                children={(field) => {
-                  return (
-                    <InputField
-                      label="Question"
-                      name={field.name}
-                      type="textarea"
-                      placeholder="Enter question"
-                      field={field}
-                    />
-                  );
-                }}
-              />
-              <form.Field
-                name="answer"
-                validators={{
-                  onChange: ({ value }) =>
-                    !value.trim() ? "An answer is required" : undefined,
-                }}
-                children={(field) => {
-                  return (
-                    <InputField
-                      label="Answer"
-                      name={field.name}
-                      placeholder="Enter answer"
-                      field={field}
-                    />
-                  );
-                }}
-              />
-              <form.Subscribe
-                selector={(state) => [state.canSubmit, state.isSubmitting]}
-                children={([canSubmit, isSubmitting]) => (
-                  <div className="flex justify-end w-full mt-4">
-                    {connected ? (
-                      <ActionButton
-                        type="submit"
-                        isLoading={isSubmitting}
-                        disabled={!canSubmit}
-                        variant="primary"
-                      >
-                        Create Quiz
-                      </ActionButton>
-                    ) : (
-                      <WalletButton />
-                    )}
-                  </div>
-                )}
-              />
-            </div>
-          </form>
-        )}
-      </TransactionCard>
-    </div>
+    <TransactionCard
+      isTransactionDetailOpen={isTransactionDetailOpen}
+      transactionDetail={
+        <QuizTransactionDetail
+          amount={form.getFieldValue("amount")}
+          question={form.getFieldValue("question")}
+          answer={form.getFieldValue("answer")}
+          txHash={txHash}
+          onCloseDetail={() => {
+            setIsTransactionDetailOpen(false);
+            setShowForm(true);
+            form.reset();
+          }}
+        />
+      }
+    >
+      {showForm && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
+          }}
+        >
+          <div className="flex flex-col gap-4">
+            <form.Field
+              name="amount"
+              validators={{
+                onChange: ({ value }) =>
+                  !value.trim() ? "An amount is required" : undefined,
+              }}
+              children={(field) => {
+                return (
+                  <InputField
+                    label="Amount"
+                    name={field.name}
+                    type="number"
+                    placeholder="Enter amount of ADA"
+                    field={field}
+                  />
+                );
+              }}
+            />
+            <form.Field
+              name="question"
+              validators={{
+                onChange: ({ value }) =>
+                  !value.trim() ? "A question is required" : undefined,
+              }}
+              children={(field) => {
+                return (
+                  <InputField
+                    label="Question"
+                    name={field.name}
+                    type="textarea"
+                    placeholder="Enter question"
+                    field={field}
+                  />
+                );
+              }}
+            />
+            <form.Field
+              name="answer"
+              validators={{
+                onChange: ({ value }) =>
+                  !value.trim() ? "An answer is required" : undefined,
+              }}
+              children={(field) => {
+                return (
+                  <InputField
+                    label="Answer"
+                    name={field.name}
+                    placeholder="Enter answer"
+                    field={field}
+                  />
+                );
+              }}
+            />
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+              children={([canSubmit, isSubmitting]) => (
+                <div className="flex justify-end w-full mt-4">
+                  {connected ? (
+                    <ActionButton
+                      type="submit"
+                      isLoading={isSubmitting}
+                      disabled={!canSubmit}
+                      variant="primary"
+                    >
+                      Create Quiz
+                    </ActionButton>
+                  ) : (
+                    <WalletButton />
+                  )}
+                </div>
+              )}
+            />
+          </div>
+        </form>
+      )}
+    </TransactionCard>
   );
 };

@@ -1,9 +1,7 @@
 import React, { ReactNode } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./card";
+import { cn } from "../../lib/common/utils";
 
 type TransactionCardProps = {
-  title: string;
-  icon: ReactNode;
   children: ReactNode;
   isTransactionDetailOpen?: boolean;
   transactionDetail?: ReactNode;
@@ -11,16 +9,14 @@ type TransactionCardProps = {
 };
 
 export const TransactionCard: React.FC<TransactionCardProps> = ({
-  title,
-  icon,
   children,
   isTransactionDetailOpen,
   transactionDetail,
   className = "",
 }) => {
   return (
-    <div className="flex justify-center w-full">
-      <Card className={`w-full border overflow-hidden shadow-md ${className}`}>
+    <div className={cn("flex flex-col gap-4 w-full", className)}>
+      {/* <Card className={`w-full border overflow-hidden shadow-md ${className}`}>
         <CardHeader className="bg-primary/10">
           <div className="flex items-center gap-3">
             <div className="p-3 rounded-full bg-primary/80 dark:bg-primary/50 text-primary-foreground">
@@ -33,7 +29,9 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
         <CardContent className="pt-6 pb-8">{children}</CardContent>
 
         {isTransactionDetailOpen && transactionDetail}
-      </Card>
+      </Card> */}
+      {children}
+      {isTransactionDetailOpen && transactionDetail}
     </div>
   );
 };

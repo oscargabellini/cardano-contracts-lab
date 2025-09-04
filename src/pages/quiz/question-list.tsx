@@ -7,11 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "../../components/ui/dialog";
+import { Modal } from "../../components/ui/modal/modal";
 import { getScript } from "../../lib/cardano/cardano-helpers";
 import {
   getAvailableQuestions,
@@ -59,7 +55,7 @@ export const QuestionList = () => {
         <div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {quizzes?.map((quiz) => (
-              <Dialog
+              <Modal
                 onOpenChange={(open) => {
                   if (!open) {
                     setSelectedQuizId(null);
@@ -67,7 +63,7 @@ export const QuestionList = () => {
                 }}
                 key={quiz.id}
               >
-                <DialogTrigger>
+                <Modal.Trigger>
                   <QuestionCard
                     key={quiz.id}
                     quiz={quiz}
@@ -75,8 +71,8 @@ export const QuestionList = () => {
                     value={quiz.valueFormatted}
                     question={quiz.question}
                   />
-                </DialogTrigger>
-                <DialogContent>
+                </Modal.Trigger>
+                <Modal.Content>
                   <div className="mt-4">
                     {selectedQuizId === selectedQuiz?.id &&
                       selectedQuiz?.question && (
@@ -89,8 +85,8 @@ export const QuestionList = () => {
                         />
                       )}
                   </div>
-                </DialogContent>
-              </Dialog>
+                </Modal.Content>
+              </Modal>
             ))}
           </div>
         </div>

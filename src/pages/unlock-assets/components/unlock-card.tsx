@@ -1,10 +1,11 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
-import { UnlockIcon } from "lucide-react";
 import { useState } from "react";
 import { TransactionDetail } from "../../../components/features/transaction-detail";
+import { TransactionDetails } from "../../../components/features/transaction-details";
 import { ActionButton } from "../../../components/ui/action-button";
 import { AlertBox } from "../../../components/ui/alert-box";
+import { Button } from "../../../components/ui/button";
 import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
@@ -12,7 +13,10 @@ import { WalletButton } from "../../../components/ui/wallet/wallet";
 import { getUtxoByTxHash } from "../../../lib/cardano/cardano-helpers";
 import { buildUnlockTx } from "../../../lib/cardano/unlock-assets/unlock-assets";
 
-export const UnlockCard = () => {
+export const UnlockCard = (props: {
+  onComplete: (transactionDetails: TransactionDetails) => void;
+  onClose?: () => void;
+}) => {
   const { connected, wallet, name: walletName } = useWallet();
   const { toast } = useToast();
 
@@ -56,6 +60,21 @@ export const UnlockCard = () => {
           description: `Funds unlocked successfully. Soon you will receive your funds back.`,
           variant: "success",
         });
+
+        console.log("unsignedTx", unsignedTx);
+        console.log("signedTx", signedTx);
+        console.log("submittedTxHash", submittedTxHash);
+        console.log("utxo", utxo);
+
+        props.onComplete({
+          txHash: submittedTxHash,
+          action: "Unlock Funds",
+          amount:
+            utxo.output.amount
+              .filter((asset) => asset.unit === "lovelace")
+              .reduce((sum, asset) => sum + parseInt(asset.quantity), 0) /
+            1000000,
+        });
       } catch (error: any) {
         toast({
           title: "Transaction failed",
@@ -71,8 +90,6 @@ export const UnlockCard = () => {
 
   return (
     <TransactionCard
-      title="Unlock Funds"
-      icon={<UnlockIcon className="w-4 h-4" />}
       isTransactionDetailOpen={isTransactionDetailOpen}
       transactionDetail={
         <TransactionDetail
@@ -104,7 +121,7 @@ export const UnlockCard = () => {
               <form.Field
                 name="txHash"
                 validators={{
-                  onChange: ({ value }) =>
+                  onSubmit: ({ value }) =>
                     !value.trim() ? "Transaction hash is required" : undefined,
                 }}
                 children={(field) => {
@@ -124,7 +141,12 @@ export const UnlockCard = () => {
               <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => (
-                  <div className="flex justify-end w-full mt-4">
+                  <div className="flex flex-col-reverse md:flex-row gap-4 pt-2 w-full mt-4 justify-end">
+                    {props.onClose && (
+                      <Button variant="secondary" onClick={props.onClose}>
+                        Close
+                      </Button>
+                    )}
                     {connected ? (
                       <ActionButton
                         type="submit"
