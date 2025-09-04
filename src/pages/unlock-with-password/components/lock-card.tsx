@@ -38,11 +38,6 @@ export const LockWithPasswordCard = () => {
 
         setTxHash(txHash);
 
-        toast({
-          title: "Transaction submitted successfully",
-          variant: "success",
-        });
-
         setIsTransactionDetailOpen(true);
         setShowForm(false);
       } catch (error: any) {

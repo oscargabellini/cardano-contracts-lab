@@ -49,12 +49,6 @@ export const UnlockWithPasswordCard = () => {
         setTxHash(submittedTxHash);
         setIsTransactionDetailOpen(true);
         setShowForm(false);
-
-        toast({
-          title: "Transaction submitted successfully",
-          description: `Funds unlocked successfully. Soon you will receive your funds back.`,
-          variant: "success",
-        });
       } catch (error: any) {
         toast({
           title: "Transaction failed",
