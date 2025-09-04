@@ -33,7 +33,7 @@ export const getAvailableQuestions = async (
           utxo: utxo,
           question: question,
           value: lovelaceValue,
-          valueFormatted: `${parseInt(lovelaceValue) / 1000000} ₳`,
+          valueFormatted: `${parseInt(lovelaceValue) / 1000000}`,
         };
       });
 

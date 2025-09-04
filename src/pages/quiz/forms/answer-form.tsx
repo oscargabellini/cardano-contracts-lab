@@ -1,8 +1,7 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
-import { useState } from "react";
-import { TransactionDetail } from "../../../components/features/transaction-detail";
 import { ActionButton } from "../../../components/ui/action-button";
+import { Button } from "../../../components/ui/button";
 import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
@@ -10,19 +9,23 @@ import { WalletButton } from "../../../components/ui/wallet/wallet";
 import { getUtxoByTxHash } from "../../../lib/cardano/cardano-helpers";
 import { addAnswer } from "../../../lib/cardano/quiz/add-answer";
 
+export type AnswerDetails = {
+  amount: string;
+  question: string;
+  answer: string;
+  txHash: string;
+};
+
 type AnswerCardProps = {
   question: string;
   questionHash: string;
-  onCorrectAnswer: () => void;
+  onCorrectAnswer: (txHash: string, answer: string) => void;
+  onClose: () => void;
 };
 
 export const AddAnswerForm = (props: AnswerCardProps) => {
   const { connected, wallet } = useWallet();
   const { toast } = useToast();
-
-  const [txHash, setTxHash] = useState<string>("");
-  const [isTransactionDetailOpen, setIsTransactionDetailOpen] =
-    useState<boolean>(false);
 
   const form = useForm({
     defaultValues: {
@@ -43,14 +46,8 @@ export const AddAnswerForm = (props: AnswerCardProps) => {
 
         const signedTx = await wallet.signTx(buildAnswerTx, true);
         const txHash = await wallet.submitTx(signedTx);
-        setTxHash(txHash);
-        setIsTransactionDetailOpen(true);
-        toast({
-          variant: "success",
-          title: "Correct answer",
-          description: `You answered correctly!`,
-        });
-        props.onCorrectAnswer();
+
+        props.onCorrectAnswer(txHash, value.answer);
       } catch (error) {
         toast({
           variant: "destructive",
@@ -62,15 +59,7 @@ export const AddAnswerForm = (props: AnswerCardProps) => {
     },
   });
   return (
-    <TransactionCard
-      isTransactionDetailOpen={isTransactionDetailOpen}
-      transactionDetail={
-        <TransactionDetail
-          txHash={txHash}
-          onCloseDetail={() => setIsTransactionDetailOpen(false)}
-        />
-      }
-    >
+    <TransactionCard>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -78,7 +67,6 @@ export const AddAnswerForm = (props: AnswerCardProps) => {
           form.handleSubmit();
         }}
       >
-        <p className="text-lg font-semibold mb-4">{props.question}</p>
         <form.Field
           name="answer"
           validators={{
@@ -104,7 +92,10 @@ export const AddAnswerForm = (props: AnswerCardProps) => {
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
-            <div className="flex justify-end w-full mt-4">
+            <div className="flex flex-col-reverse md:flex-row gap-4 pt-2 w-full mt-4 justify-end">
+              <Button variant="secondary" onClick={props.onClose}>
+                Close
+              </Button>
               {connected ? (
                 <ActionButton
                   type="submit"

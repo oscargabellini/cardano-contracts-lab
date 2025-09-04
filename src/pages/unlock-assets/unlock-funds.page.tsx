@@ -68,7 +68,7 @@ const LockInformationModal = (props: {
     <Modal open={props.open} onOpenChange={props.onOpenChange}>
       <Modal.Trigger>
         <ContractInformationCard
-          icon={<LockIcon className="h-6 w-6 text-primary-foreground" />}
+          icon={<LockIcon className="h-6 w-6 " />}
           title="Lock Funds"
           description="When you lock funds, they are securely stored in a Cardano smart contract. You'll receive a unique Transaction ID that you can use to unlock your funds later."
         />
@@ -94,7 +94,7 @@ const UnlockInformationModal = (props: {
     <Modal open={props.open} onOpenChange={props.onOpenChange}>
       <Modal.Trigger>
         <ContractInformationCard
-          icon={<UnlockIcon className="h-6 w-6 text-primary-foreground" />}
+          icon={<UnlockIcon className="h-6 w-6" />}
           title="Unlock Funds"
           description="To unlock your funds, simply provide the Transaction ID. The smart contract will verify your ownership and return the funds to your wallet."
         />

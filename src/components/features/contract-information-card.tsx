@@ -21,7 +21,7 @@ export const ContractInformationCard = (
         <div className="flex flex-col items-center">
           <div className="relative mb-4">
             <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 rounded-2xl blur-sm opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
-            <div className="relative bg-gradient-to-r from-primary to-primary/80 p-4 rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+            <div className="relative bg-gradient-to-r from-primary to-primary/80 p-4 rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow duration-300 text-primary-foreground">
               {props.icon}
             </div>
           </div>

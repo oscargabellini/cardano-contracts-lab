@@ -122,11 +122,12 @@ export const TransactionDetailsModal = (
                   className="flex items-center justify-center gap-2"
                 >
                   <img
-                    src="logo_cex_cardano.svg"
+                    src="/logo_cex_cardano.svg"
                     alt="Cardano Explorer"
                     className="w-5 h-5"
                   />
-                  View in Explorer <ExternalLinkIcon className="w-5 h-5" />
+                  View in Cardano Explorer{" "}
+                  <ExternalLinkIcon className="w-5 h-5" />
                 </a>
               </Button>
             </div>

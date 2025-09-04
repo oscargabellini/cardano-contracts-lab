@@ -68,7 +68,7 @@ const LockInformationModal = (props: {
     <Modal open={props.open} onOpenChange={props.onOpenChange}>
       <Modal.Trigger>
         <ContractInformationCard
-          icon={<LockIcon className="h-6 w-6 text-primary-foreground" />}
+          icon={<LockIcon className="h-6 w-6" />}
           title="Lock Funds with Password"
           description="When you lock funds with a password, the password is stored
                   securely in the smart contract. This adds an extra layer of
@@ -97,7 +97,7 @@ const UnlockInformationModal = (props: {
     <Modal open={props.open} onOpenChange={props.onOpenChange}>
       <Modal.Trigger>
         <ContractInformationCard
-          icon={<UnlockIcon className="h-6 w-6 text-primary-foreground" />}
+          icon={<UnlockIcon className="h-6 w-6" />}
           title="Unlock Funds with Password"
           description=" To unlock your funds, you need to provide both the transaction
                   hash and the password you used when locking the funds. This

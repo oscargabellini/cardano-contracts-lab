@@ -1,7 +1,6 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
-import { TransactionDetail } from "../../../components/features/transaction-detail";
 import { TransactionDetails } from "../../../components/features/transaction-details";
 import { ActionButton } from "../../../components/ui/action-button";
 import { AlertBox } from "../../../components/ui/alert-box";
@@ -21,11 +20,7 @@ type UnlockWithPasswordCardProps = {
 export const UnlockWithPasswordCard = (props: UnlockWithPasswordCardProps) => {
   const { connected, wallet, name: walletName } = useWallet();
 
-  const [isTransactionDetailOpen, setIsTransactionDetailOpen] =
-    useState<boolean>(false);
-  const [txHash, setTxHash] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [showForm, setShowForm] = useState<boolean>(true);
 
   const form = useForm({
     defaultValues: {
@@ -53,9 +48,6 @@ export const UnlockWithPasswordCard = (props: UnlockWithPasswordCardProps) => {
         const signedTx = await wallet.signTx(unsignedTx, true);
         const submittedTxHash = await wallet.submitTx(signedTx);
 
-        setTxHash(submittedTxHash);
-        setIsTransactionDetailOpen(true);
-        setShowForm(false);
         props.onComplete({
           txHash: submittedTxHash,
           action: "Unlock Funds with Password",
@@ -79,103 +71,89 @@ export const UnlockWithPasswordCard = (props: UnlockWithPasswordCardProps) => {
   });
 
   return (
-    <TransactionCard
-      isTransactionDetailOpen={isTransactionDetailOpen}
-      transactionDetail={
-        <TransactionDetail
-          txHash={txHash}
-          onCloseDetail={() => {
-            setIsTransactionDetailOpen(false);
-            setShowForm(true);
-            form.reset();
-          }}
-        />
-      }
-    >
+    <TransactionCard>
       <div className="flex flex-col gap-5">
         <AlertBox variant="info">
           Enter the transaction hash and the password to unlock your funds from
           the blockchain.
         </AlertBox>
 
-        {showForm && (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              form.handleSubmit();
-            }}
-            className="flex flex-col h-full"
-          >
-            <div className="flex flex-col gap-4">
-              <form.Field
-                name="txHash"
-                validators={{
-                  onSubmit: ({ value }) =>
-                    !value.trim() ? "Transaction hash is required" : undefined,
-                }}
-                children={(field) => {
-                  return (
-                    <InputField
-                      label="Transaction Hash"
-                      name={field.name}
-                      placeholder="Enter the transaction hash here..."
-                      field={field}
-                      disabled={isLoading}
-                      autoComplete="off"
-                    />
-                  );
-                }}
-              />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
+          }}
+          className="flex flex-col h-full"
+        >
+          <div className="flex flex-col gap-4">
+            <form.Field
+              name="txHash"
+              validators={{
+                onSubmit: ({ value }) =>
+                  !value.trim() ? "Transaction hash is required" : undefined,
+              }}
+              children={(field) => {
+                return (
+                  <InputField
+                    label="Transaction Hash"
+                    name={field.name}
+                    placeholder="Enter the transaction hash here..."
+                    field={field}
+                    disabled={isLoading}
+                    autoComplete="off"
+                  />
+                );
+              }}
+            />
 
-              <form.Field
-                name="password"
-                validators={{
-                  onSubmit: ({ value }) =>
-                    !value.trim() ? "Password is required" : undefined,
-                }}
-                children={(field) => {
-                  return (
-                    <InputField
-                      label="Password"
-                      type="password"
-                      name={field.name}
-                      placeholder="Enter the password to unlock the funds"
-                      field={field}
-                      disabled={isLoading}
-                      autoComplete="off"
-                    />
-                  );
-                }}
-              />
+            <form.Field
+              name="password"
+              validators={{
+                onSubmit: ({ value }) =>
+                  !value.trim() ? "Password is required" : undefined,
+              }}
+              children={(field) => {
+                return (
+                  <InputField
+                    label="Password"
+                    type="password"
+                    name={field.name}
+                    placeholder="Enter the password to unlock the funds"
+                    field={field}
+                    disabled={isLoading}
+                    autoComplete="off"
+                  />
+                );
+              }}
+            />
 
-              <form.Subscribe
-                selector={(state) => [state.canSubmit, state.isSubmitting]}
-                children={([canSubmit, isSubmitting]) => (
-                  <div className="flex flex-col-reverse md:flex-row gap-4 pt-2 w-full mt-4 justify-end">
-                    {props.onClose && (
-                      <Button variant="secondary" onClick={props.onClose}>
-                        Close
-                      </Button>
-                    )}
-                    {connected ? (
-                      <ActionButton
-                        type="submit"
-                        isLoading={isLoading || isSubmitting}
-                        disabled={!canSubmit}
-                        variant="primary"
-                      >
-                        Unlock Funds
-                      </ActionButton>
-                    ) : (
-                      <WalletButton />
-                    )}
-                  </div>
-                )}
-              />
-            </div>
-          </form>
-        )}
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+              children={([canSubmit, isSubmitting]) => (
+                <div className="flex flex-col-reverse md:flex-row gap-4 pt-2 w-full mt-4 justify-end">
+                  {props.onClose && (
+                    <Button variant="secondary" onClick={props.onClose}>
+                      Close
+                    </Button>
+                  )}
+                  {connected ? (
+                    <ActionButton
+                      type="submit"
+                      isLoading={isLoading || isSubmitting}
+                      disabled={!canSubmit}
+                      variant="primary"
+                    >
+                      Unlock Funds
+                    </ActionButton>
+                  ) : (
+                    <WalletButton />
+                  )}
+                </div>
+              )}
+            />
+          </div>
+        </form>
       </div>
     </TransactionCard>
   );

@@ -1,26 +1,30 @@
-import { Outlet, useNavigate } from "@tanstack/react-router";
-import {
-  ArrowLeftIcon,
-  CheckCircle,
-  PlusCircle,
-  ShieldCheck,
-} from "lucide-react";
+import { ArrowLeftIcon, CheckCircle, PlusCircle } from "lucide-react";
 import { useState } from "react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../../components/ui/accordion";
+import { ContractInformationCard } from "../../components/features/contract-information-card";
+import { QuizTransactionDetailsModal } from "../../components/features/quiz-transaction-detail";
 import { GoBackButton } from "../../components/ui/go-back-button";
 import { Modal } from "../../components/ui/modal/modal";
 import { PageContainer } from "../../components/ui/page-container";
+import { useModal } from "../../hooks/use-modal";
 import { AddQuestionForm } from "./forms/question-form";
-import { AnswerCard, QuestionCard } from "./quiz-options";
+import { QuestionsList } from "./question-list";
+
+export type QuizTransactionDetails = {
+  amount: string;
+  question: string;
+  answer: string;
+  txHash: string;
+};
 
 export const QuizPage = () => {
-  const navigate = useNavigate();
-  const [activeCard, setActiveCard] = useState<"question" | "answer">();
+  const [quizTransactionDetails, setQuizTransactionDetails] =
+    useState<QuizTransactionDetails>();
+
+  const [showQuestionList, setShowQuestionList] = useState(false);
+
+  const createQuizModal = useModal();
+
+  const createDetailsModal = useModal();
 
   return (
     <PageContainer>
@@ -28,100 +32,78 @@ export const QuizPage = () => {
         <ArrowLeftIcon className="w-4 h-4" /> Select another contract
       </GoBackButton>
       <div className="flex flex-col gap-6">
-        <HowItWorks />
         <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:gap-20">
-          <QuestionCard
-            isActive={activeCard === "question"}
-            onClick={() => {
-              setActiveCard("question");
-              navigate({ to: "/quiz/add-question" });
-            }}
-          />
           <CreateQuizModal
-            open={activeCard === "question"}
-            onOpenChange={(open) => {
-              if (!open) {
-                setActiveCard(undefined);
-              }
+            open={createQuizModal.isOpen}
+            onOpenChange={createQuizModal.toggle}
+            onComplete={(transactionDetails) => {
+              setQuizTransactionDetails(transactionDetails);
+              createQuizModal.close();
+              createDetailsModal.open();
             }}
           />
-          <AnswerCard
-            isActive={activeCard === "answer"}
+
+          <AnswerQuizCard
             onClick={() => {
-              setActiveCard("answer");
-              navigate({ to: "/quiz/select-question" });
+              setShowQuestionList(true);
             }}
           />
+
+          {createDetailsModal.isOpen && quizTransactionDetails && (
+            <QuizTransactionDetailsModal
+              open={createDetailsModal.isOpen}
+              onOpenChange={createDetailsModal.toggle}
+              type="create"
+              transactionDetails={quizTransactionDetails}
+            />
+          )}
         </div>
       </div>
-      <Outlet />
+      {showQuestionList && <QuestionsList />}
     </PageContainer>
-  );
-};
-
-const HowItWorks = () => {
-  return (
-    <Accordion
-      type="single"
-      collapsible
-      defaultValue="how-it-works"
-      className="border-2 rounded-lg border-border/50 bg-gradient-to-br from-secondary/30 to-background"
-    >
-      <AccordionItem value="how-it-works" className="border-b-0">
-        <AccordionTrigger className="px-6 py-4 hover:no-underline">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5 text-primary" />
-            <h2 className="text-xl font-semibold">How It Works</h2>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-6 pb-6 pt-2">
-          <div className="space-y-6">
-            <div className="flex items-start gap-4">
-              <div className="bg-primary/10 p-3 rounded-full">
-                <PlusCircle className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-medium text-lg">Create a Quiz</h3>
-                <p className="text-muted-foreground">
-                  Create a quiz with a question, the correct answer and ADA as
-                  reward. The reward is locked in the smart contract until
-                  someone answers correctly.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="bg-primary/10 p-3 rounded-full">
-                <CheckCircle className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-medium text-lg">Answer Quizzes</h3>
-                <p className="text-muted-foreground">
-                  Browse available quizzes and submit your answers. If you
-                  answer correctly, you'll receive the ADA reward instantly.
-                </p>
-              </div>
-            </div>
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
   );
 };
 
 type CreateQuizModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onComplete: (transactionDetails: QuizTransactionDetails) => void;
 };
 
 const CreateQuizModal = (props: CreateQuizModalProps) => {
   return (
     <Modal open={props.open} onOpenChange={props.onOpenChange}>
-      <Modal.Content>
+      <Modal.Trigger>
+        <ContractInformationCard
+          icon={<PlusCircle className="h-6 w-6" />}
+          title="Create a Quiz"
+          description="Create a quiz with ADA as
+                  reward. The reward is locked in the smart contract until
+                  someone answers correctly."
+        />
+      </Modal.Trigger>
+      <Modal.Content className="max-h-[90vh] h-[700px] md:h-auto">
         <Modal.Header>
           <Modal.Title>Create a Quiz</Modal.Title>
         </Modal.Header>
-        <AddQuestionForm />
+        <AddQuestionForm
+          onComplete={props.onComplete}
+          onClose={() => props.onOpenChange(false)}
+        />
       </Modal.Content>
     </Modal>
+  );
+};
+
+const AnswerQuizCard = (props: { onClick: () => void }) => {
+  return (
+    <div onClick={props.onClick}>
+      <ContractInformationCard
+        icon={<CheckCircle className="h-6 w-6" />}
+        title="Answer a Quiz"
+        description="Browse available quizzes and submit your answers. If you
+                  answer correctly, you'll receive the ADA reward instantly."
+      />
+    </div>
   );
 };
