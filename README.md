@@ -7,7 +7,7 @@ A web application for experimenting with smart contracts on the Cardano blockcha
 The application includes the following smart contracts:
 
 1. **Basic Lock/Unlock**: Simple contract to lock and unlock funds
-2. **Message-Verified Unlock**: Contract that requires a specific message to unlock funds
+2. **Unlock With Password**: Contract that requires a password to unlock funds
 3. **Quiz Contract**: Smart contract that handles questions and rewards for correct answers
 
 All contracts are built using Aiken, a language designed for Cardano smart contracts.
@@ -78,7 +78,7 @@ The built application will be in the `dist` directory.
   - `config/`: Application configuration and constants
   - `hooks/`: Custom React hooks
   - `lib/`: Utilities and helpers
-  - `pages/`:
+  - `pages/`: All the pages
   - `providers/`: React context providers
 
 ## Contribution
