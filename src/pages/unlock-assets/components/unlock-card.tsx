@@ -55,17 +55,6 @@ export const UnlockCard = (props: {
         setIsTransactionDetailOpen(true);
         setShowForm(false);
 
-        toast({
-          title: "Transaction submitted successfully",
-          description: `Funds unlocked successfully. Soon you will receive your funds back.`,
-          variant: "success",
-        });
-
-        console.log("unsignedTx", unsignedTx);
-        console.log("signedTx", signedTx);
-        console.log("submittedTxHash", submittedTxHash);
-        console.log("utxo", utxo);
-
         props.onComplete({
           txHash: submittedTxHash,
           action: "Unlock Funds",

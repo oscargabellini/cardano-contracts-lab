@@ -38,11 +38,6 @@ export const LockCard = (props: {
         ]);
         setTxHash(txHash);
 
-        toast({
-          title: "Transaction submitted successfully",
-          variant: "success",
-        });
-
         setIsTransactionDetailOpen(true);
         setShowForm(false);
         props.onComplete({
