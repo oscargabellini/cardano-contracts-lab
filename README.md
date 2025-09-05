@@ -17,6 +17,7 @@ All contracts are built using Aiken, a language designed for Cardano smart contr
 - React 19
 - TypeScript
 - TanStack Router for navigation
+- TanStack Query for data fetching and mutations
 - Tailwind CSS for styling
 - Mesh SDK for Cardano blockchain integration
 - Vite for development and building
@@ -80,6 +81,7 @@ The built application will be in the `dist` directory.
   - `lib/`: Utilities and helpers
   - `pages/`: All the pages
   - `providers/`: React context providers
+  - `types/`: TypeScript type definitions
 
 ## Contribution
 
