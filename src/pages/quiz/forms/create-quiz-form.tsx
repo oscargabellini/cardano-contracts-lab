@@ -6,17 +6,36 @@ import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet/wallet";
-import { addQuestion } from "../../../lib/cardano/quiz/add-question";
+import { useCreateQuizMutation } from "../../../lib/mutations/use-create-quiz-mutation";
 import { QuizTransactionDetails } from "../quiz.page";
 
-type AddQuestionFormProps = {
+type CreateQuizFormProps = {
   onComplete: (transactionDetails: QuizTransactionDetails) => void;
   onClose: () => void;
 };
 
-export const AddQuestionForm = (props: AddQuestionFormProps) => {
+export const CreateQuizForm = (props: CreateQuizFormProps) => {
   const { connected, wallet } = useWallet();
   const { toast } = useToast();
+
+  const createQuizMutation = useCreateQuizMutation({
+    onSuccess: (data, variables) => {
+      props.onComplete({
+        txHash: data,
+        question: variables.question,
+        answer: variables.answer,
+        amount: variables.prize,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: `An error occurred while creating the quiz.`,
+      });
+      console.error(error);
+    },
+  });
 
   const form = useForm({
     defaultValues: {
@@ -25,24 +44,12 @@ export const AddQuestionForm = (props: AddQuestionFormProps) => {
       prize: "",
     },
     onSubmit: async ({ value }) => {
-      try {
-        const txHash = await addQuestion(wallet, value.question, value.answer, [
-          { unit: "lovelace", quantity: String(+value.prize * 1000000) },
-        ]);
-        props.onComplete({
-          txHash,
-          question: value.question,
-          answer: value.answer,
-          amount: value.prize,
-        });
-      } catch (error) {
-        console.error(error);
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: `An error occurred while adding the question.`,
-        });
-      }
+      createQuizMutation.mutateAsync({
+        wallet,
+        question: value.question,
+        answer: value.answer,
+        prize: value.prize,
+      });
     },
   });
   return (
@@ -69,6 +76,7 @@ export const AddQuestionForm = (props: AddQuestionFormProps) => {
                   type="textarea"
                   placeholder="Enter question"
                   field={field}
+                  disabled={createQuizMutation.isPending}
                 />
               );
             }}
@@ -86,6 +94,7 @@ export const AddQuestionForm = (props: AddQuestionFormProps) => {
                   name={field.name}
                   placeholder="Enter answer"
                   field={field}
+                  disabled={createQuizMutation.isPending}
                 />
               );
             }}
@@ -104,6 +113,7 @@ export const AddQuestionForm = (props: AddQuestionFormProps) => {
                   type="number"
                   placeholder="Enter prize"
                   field={field}
+                  disabled={createQuizMutation.isPending}
                 />
               );
             }}
@@ -118,7 +128,7 @@ export const AddQuestionForm = (props: AddQuestionFormProps) => {
                 {connected ? (
                   <ActionButton
                     type="submit"
-                    isLoading={isSubmitting}
+                    isLoading={isSubmitting || createQuizMutation.isPending}
                     disabled={!canSubmit}
                     variant="primary"
                   >

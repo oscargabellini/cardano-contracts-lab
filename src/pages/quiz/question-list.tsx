@@ -15,7 +15,7 @@ import {
   getAvailableQuestions,
   Question,
 } from "../../lib/cardano/quiz/utils/get-questions";
-import { AddAnswerForm, AnswerDetails } from "./forms/answer-form";
+import { AnswerDetails, AnswerQuizForm } from "./forms/answer-quiz-form";
 
 export const QuestionsList = () => {
   const [quizzes, setQuizzes] = useState<Question[] | null>(null);
@@ -92,7 +92,7 @@ export const QuestionsList = () => {
                   <div className="mt-4">
                     {selectedQuizId === selectedQuiz?.id &&
                       selectedQuiz?.question && (
-                        <AddAnswerForm
+                        <AnswerQuizForm
                           question={selectedQuiz.question}
                           questionHash={selectedQuiz.id}
                           onCorrectAnswer={(txHash, answer) => {

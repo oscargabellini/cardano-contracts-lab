@@ -1,7 +1,7 @@
 import { IWallet } from "@meshsdk/core";
 import { useMutation } from "@tanstack/react-query";
-import { lockAssetsWithPassword } from "../../../lib/cardano/unlock-with-password/lock-assets";
-import { MutationCallbacks } from "../../../types";
+import { MutationCallbacks } from "../../types";
+import { lockAssetsWithPasswordTransaction } from "../cardano/unlock-with-password/lock-assets-with-password-transaction";
 
 type CreateMutationVariables = {
   amount: number;
@@ -10,7 +10,7 @@ type CreateMutationVariables = {
 };
 
 async function mutationFn(variables: CreateMutationVariables) {
-  const txHash = await lockAssetsWithPassword(
+  const txHash = await lockAssetsWithPasswordTransaction(
     variables.wallet,
     [{ unit: "lovelace", quantity: String(+variables.amount * 1000000) }],
     variables.password

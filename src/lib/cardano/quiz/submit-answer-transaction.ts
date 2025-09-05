@@ -6,7 +6,7 @@ import {
   getWalletInfoForTx,
 } from "../cardano-helpers";
 
-export async function addAnswer(
+export async function submitAnswerTransaction(
   scriptUtxo: UTxO,
   connectedWallet: IWallet,
   answer: string

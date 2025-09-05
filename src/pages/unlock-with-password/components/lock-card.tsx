@@ -8,7 +8,7 @@ import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet/wallet";
-import { useLockAssetsWithPasswordMutation } from "../mutations/use-lock-assets-with-password-mutation";
+import { useLockAssetsWithPasswordMutation } from "../../../lib/mutations/use-lock-assets-with-password-mutation";
 
 type LockWithPasswordCardProps = {
   onComplete: (transactionDetails: TransactionDetails) => void;

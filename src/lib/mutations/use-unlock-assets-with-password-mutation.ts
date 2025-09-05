@@ -1,30 +1,33 @@
 import { IWallet } from "@meshsdk/core";
 import { useMutation } from "@tanstack/react-query";
-import { getUtxoByTxHash } from "../../../lib/cardano/cardano-helpers";
-import { buildUnlockTx } from "../../../lib/cardano/unlock-assets/unlock-assets";
-import { MutationCallbacks } from "../../../types";
+import { MutationCallbacks } from "../../types";
+import { getUtxoByTxHash } from "../cardano/cardano-helpers";
+import { unlockAssetsWithPasswordTransaction } from "../cardano/unlock-with-password/unlock-assets-with-password-transaction";
 
-type UnlockMutationVariables = {
-  txHash: string;
+type CreateMutationVariables = {
   wallet: IWallet;
+  password: string;
+  txHash: string;
 };
 
-async function mutationFn(variables: UnlockMutationVariables) {
+async function mutationFn(variables: CreateMutationVariables) {
   const utxo = await getUtxoByTxHash(variables.txHash);
   if (!utxo) {
     throw new Error("Transaction not found");
   }
-
-  const unsignedTx = await buildUnlockTx(utxo, variables.wallet);
+  const unsignedTx = await unlockAssetsWithPasswordTransaction(
+    utxo,
+    variables.wallet,
+    variables.password
+  );
   const signedTx = await variables.wallet.signTx(unsignedTx, true);
   const submittedTxHash = await variables.wallet.submitTx(signedTx);
-
   return { submittedTxHash, utxo };
 }
 
-export const useUnlockAssetsMutation = (
+export const useUnlockAssetsWithPasswordMutation = (
   callbacks?: MutationCallbacks<
-    UnlockMutationVariables,
+    CreateMutationVariables,
     Awaited<ReturnType<typeof mutationFn>>
   >
 ) => {

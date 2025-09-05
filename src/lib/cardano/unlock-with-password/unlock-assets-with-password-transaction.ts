@@ -1,22 +1,32 @@
-import { deserializeAddress, IWallet, mConStr0, UTxO } from "@meshsdk/core";
-import blueprint from "../../../../aiken-workspace/unlock-assets/plutus.json";
+import {
+  deserializeAddress,
+  IWallet,
+  mConStr0,
+  stringToHex,
+  UTxO,
+} from "@meshsdk/core";
+import blueprint from "../../../../aiken-workspace/unlock-with-password/plutus.json";
+import { hashString } from "../../common/hash-string";
 import {
   getScript,
   getTxBuilder,
   getWalletInfoForTx,
 } from "../cardano-helpers";
 
-export async function buildUnlockTx(
+export async function unlockAssetsWithPasswordTransaction(
   scriptUtxo: UTxO,
-  connectedWallet: IWallet
+  connectedWallet: IWallet,
+  password: string
 ): Promise<string> {
   const { utxos, collateral, walletAddress } = await getWalletInfoForTx(
     connectedWallet
   );
   const { scriptCbor } = getScript(blueprint.validators[0].compiledCode);
   const signerHash = deserializeAddress(walletAddress).pubKeyHash;
+  const passwordHash = hashString(password);
 
   const txBuilder = getTxBuilder();
+
   await txBuilder
     .spendingPlutusScript("V3")
     .txIn(
@@ -26,8 +36,8 @@ export async function buildUnlockTx(
       scriptUtxo.output.address
     )
     .txInScript(scriptCbor)
-    .txInRedeemerValue(mConStr0([]))
-    .txInDatumValue(mConStr0([signerHash]))
+    .txInRedeemerValue(mConStr0([stringToHex(password)]))
+    .txInDatumValue(mConStr0([signerHash, passwordHash]))
     .requiredSignerHash(signerHash)
     .changeAddress(walletAddress)
     .txInCollateral(

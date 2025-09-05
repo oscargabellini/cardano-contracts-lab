@@ -8,7 +8,7 @@ import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet/wallet";
-import { useLockAssetsMutation } from "../mutations/use-lock-assets-mutation";
+import { useLockAssetsMutation } from "../../../lib/mutations/use-lock-assets-mutation";
 
 export const LockCard = (props: {
   onComplete: (transactionDetails: TransactionDetails) => void;

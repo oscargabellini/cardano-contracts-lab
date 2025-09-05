@@ -6,7 +6,7 @@ import { GoBackButton } from "../../components/ui/go-back-button";
 import { Modal } from "../../components/ui/modal/modal";
 import { PageContainer } from "../../components/ui/page-container";
 import { useModal } from "../../hooks/use-modal";
-import { AddQuestionForm } from "./forms/question-form";
+import { CreateQuizForm } from "./forms/create-quiz-form";
 import { QuestionsList } from "./question-list";
 
 export type QuizTransactionDetails = {
@@ -86,7 +86,7 @@ const CreateQuizModal = (props: CreateQuizModalProps) => {
         <Modal.Header>
           <Modal.Title>Create a Quiz</Modal.Title>
         </Modal.Header>
-        <AddQuestionForm
+        <CreateQuizForm
           onComplete={props.onComplete}
           onClose={() => props.onOpenChange(false)}
         />

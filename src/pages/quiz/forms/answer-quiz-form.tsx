@@ -6,8 +6,7 @@ import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet/wallet";
-import { getUtxoByTxHash } from "../../../lib/cardano/cardano-helpers";
-import { addAnswer } from "../../../lib/cardano/quiz/add-answer";
+import { useSubmitAnswerMutation } from "../../../lib/mutations/use-submit-answer-mutation";
 
 export type AnswerDetails = {
   amount: string;
@@ -23,39 +22,33 @@ type AnswerCardProps = {
   onClose: () => void;
 };
 
-export const AddAnswerForm = (props: AnswerCardProps) => {
+export const AnswerQuizForm = (props: AnswerCardProps) => {
   const { connected, wallet } = useWallet();
   const { toast } = useToast();
+
+  const submitAnswerMutation = useSubmitAnswerMutation({
+    onSuccess: (data, variables) => {
+      props.onCorrectAnswer(data.submittedTxHash, variables.answer);
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: getQuizErrorMessage(error),
+      });
+    },
+  });
 
   const form = useForm({
     defaultValues: {
       answer: "",
     },
     onSubmit: async ({ value }) => {
-      try {
-        const utxo = await getUtxoByTxHash(props.questionHash);
-        if (!utxo) {
-          toast({
-            title: "Transaction not found",
-            description: "Please check the transaction hash and try again.",
-            variant: "destructive",
-          });
-          return;
-        }
-        const buildAnswerTx = await addAnswer(utxo, wallet, value.answer);
-
-        const signedTx = await wallet.signTx(buildAnswerTx, true);
-        const txHash = await wallet.submitTx(signedTx);
-
-        props.onCorrectAnswer(txHash, value.answer);
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: getQuizErrorMessage(error),
-        });
-        console.error(error);
-      }
+      submitAnswerMutation.mutateAsync({
+        answer: value.answer,
+        wallet,
+        txHash: props.questionHash,
+      });
     },
   });
   return (
@@ -85,6 +78,7 @@ export const AddAnswerForm = (props: AnswerCardProps) => {
                 name={field.name}
                 placeholder="Enter answer"
                 field={field}
+                disabled={submitAnswerMutation.isPending}
               />
             );
           }}
@@ -99,7 +93,7 @@ export const AddAnswerForm = (props: AnswerCardProps) => {
               {connected ? (
                 <ActionButton
                   type="submit"
-                  isLoading={isSubmitting}
+                  isLoading={submitAnswerMutation.isPending || isSubmitting}
                   disabled={!canSubmit}
                   variant="primary"
                 >

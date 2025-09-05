@@ -8,7 +8,7 @@ import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet/wallet";
-import { useUnlockAssetsWithPasswordMutation } from "../mutations/use-unlock-assets-with-password-mutation";
+import { useUnlockAssetsWithPasswordMutation } from "../../../lib/mutations/use-unlock-assets-with-password-mutation";
 
 type UnlockWithPasswordCardProps = {
   onComplete: (transactionDetails: TransactionDetails) => void;

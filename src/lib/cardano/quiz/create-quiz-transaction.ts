@@ -1,28 +1,29 @@
-import { Asset, IWallet, deserializeAddress, mConStr0 } from "@meshsdk/core";
-import blueprint from "../../../../aiken-workspace/unlock-with-password/plutus.json";
-import { hashString } from "../../common/hash-string";
+import { Asset, mConStr0 } from "@meshsdk/core";
+import { blake2b } from "blakejs";
+import blueprint from "../../../../aiken-workspace/quiz/plutus.json";
 import {
   getScript,
   getTxBuilder,
   getWalletInfoForTx,
 } from "../cardano-helpers";
 
-export async function lockAssetsWithPassword(
-  connectedWallet: IWallet,
-  assets: Asset[],
-  password: string
+export async function createQuizTransaction(
+  connectedWallet: any,
+  question: string,
+  answer: string,
+  assets: Asset[]
 ): Promise<string> {
   const { utxos, walletAddress } = await getWalletInfoForTx(connectedWallet);
   const { scriptAddr } = getScript(blueprint.validators[0].compiledCode);
 
-  const signerHash = deserializeAddress(walletAddress).pubKeyHash;
-
-  const passwordHash = hashString(password);
+  const answerBytes = new TextEncoder().encode(answer);
+  const hashBytes = blake2b(answerBytes, undefined, 32);
+  const answerHash = Buffer.from(hashBytes).toString("hex").toUpperCase();
 
   const txBuilder = getTxBuilder();
   await txBuilder
     .txOut(scriptAddr, assets)
-    .txOutDatumHashValue(mConStr0([signerHash, passwordHash]))
+    .txOutInlineDatumValue(mConStr0([answerHash, question]))
     .changeAddress(walletAddress)
     .selectUtxosFrom(utxos)
     .complete();

@@ -6,7 +6,7 @@ import {
   getWalletInfoForTx,
 } from "../cardano-helpers";
 
-export async function lockAsset(
+export async function lockAssetTransaction(
   connectedWallet: any,
   assets: Asset[]
 ): Promise<string> {
