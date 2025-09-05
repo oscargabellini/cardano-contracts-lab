@@ -28,7 +28,7 @@ export const QuizPage = () => {
 
   return (
     <PageContainer>
-      <GoBackButton navigateTo="/">
+      <GoBackButton navigateto="/">
         <ArrowLeftIcon className="w-4 h-4" /> Select another contract
       </GoBackButton>
       <div className="flex flex-col gap-6">

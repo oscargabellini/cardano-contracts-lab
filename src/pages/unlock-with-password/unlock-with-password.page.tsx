@@ -23,7 +23,7 @@ export const UnlockWithPasswordPage = () => {
 
   return (
     <PageContainer>
-      <GoBackButton navigateTo="/" className="py-6">
+      <GoBackButton navigateto="/" className="py-6">
         <ArrowLeftIcon className="w-4 h-4" /> Select another contract
       </GoBackButton>
       <div className="flex flex-col gap-6">

@@ -1,6 +1,5 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
-import { useState } from "react";
 import { TransactionDetails } from "../../../components/features/transaction-details";
 import { ActionButton } from "../../../components/ui/action-button";
 import { AlertBox } from "../../../components/ui/alert-box";
@@ -9,7 +8,7 @@ import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet/wallet";
-import { lockAsset } from "../../../lib/cardano/unlock-assets/lock-assets";
+import { useLockAssetsMutation } from "../mutations/use-lock-assets-mutation";
 
 export const LockCard = (props: {
   onComplete: (transactionDetails: TransactionDetails) => void;
@@ -18,34 +17,32 @@ export const LockCard = (props: {
   const { connected, wallet } = useWallet();
   const { toast } = useToast();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const lockAssetsMutation = useLockAssetsMutation({
+    onSuccess: (data, variables) => {
+      props.onComplete({
+        txHash: data,
+        action: "Lock Funds",
+        amount: variables.amount,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Transaction failed",
+        description: error.info || error.message,
+        variant: "destructive",
+      });
+    },
+  });
 
   const form = useForm({
     defaultValues: {
       amount: "",
     },
     onSubmit: async ({ value }) => {
-      try {
-        setIsLoading(true);
-        const txHash = await lockAsset(wallet, [
-          { unit: "lovelace", quantity: String(+value.amount * 1000000) },
-        ]);
-
-        props.onComplete({
-          txHash,
-          action: "Lock Funds",
-          amount: +value.amount,
-        });
-      } catch (error: any) {
-        toast({
-          title: "Transaction failed",
-          description: error.info || error.message,
-          variant: "destructive",
-        });
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
+      lockAssetsMutation.mutateAsync({
+        amount: +value.amount,
+        wallet,
+      });
     },
   });
 
@@ -83,7 +80,7 @@ export const LockCard = (props: {
                     type="number"
                     placeholder="Enter the amount here..."
                     field={field}
-                    disabled={isLoading}
+                    disabled={lockAssetsMutation.isPending}
                   />
                 );
               }}
@@ -101,7 +98,7 @@ export const LockCard = (props: {
                   {connected ? (
                     <ActionButton
                       type="submit"
-                      isLoading={isLoading || isSubmitting}
+                      isLoading={lockAssetsMutation.isPending || isSubmitting}
                       disabled={!canSubmit}
                       variant="primary"
                     >

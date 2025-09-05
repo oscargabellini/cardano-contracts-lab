@@ -3,7 +3,7 @@ import { cn } from "../../lib/common/utils";
 import { Button, ButtonProps } from "./button";
 
 type GoBackButtonProps = {
-  navigateTo: string;
+  navigateto: string;
 } & ButtonProps;
 
 export const GoBackButton = (props: GoBackButtonProps) => {
@@ -13,7 +13,7 @@ export const GoBackButton = (props: GoBackButtonProps) => {
     <Button
       {...props}
       variant="link"
-      onClick={() => navigate({ to: props.navigateTo })}
+      onClick={() => navigate({ to: props.navigateto })}
       className={cn("text-secondary-foreground text-lg py-3", props.className)}
     >
       {props.children}

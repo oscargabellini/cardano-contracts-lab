@@ -1,3 +1,4 @@
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { CheckCircleIcon, CopyIcon, ExternalLinkIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Modal } from "../ui/modal/modal";
@@ -27,6 +28,11 @@ export const TransactionDetailsModal = (
   return (
     <Modal open={props.open} onOpenChange={props.onOpenChange}>
       <Modal.Content className="max-h-[90vh] h-[820px] md:h-auto">
+        <VisuallyHidden>
+          <Modal.Header>
+            <Modal.Title>Transaction Completed</Modal.Title>
+          </Modal.Header>
+        </VisuallyHidden>
         <div>
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-60 pointer-events-none" />
           <div className="absolute -top-2 -right-2 w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-xl pointer-events-none" />

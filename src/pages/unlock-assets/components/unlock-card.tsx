@@ -1,6 +1,5 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
-import { useState } from "react";
 import { TransactionDetails } from "../../../components/features/transaction-details";
 import { ActionButton } from "../../../components/ui/action-button";
 import { AlertBox } from "../../../components/ui/alert-box";
@@ -9,8 +8,7 @@ import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet/wallet";
-import { getUtxoByTxHash } from "../../../lib/cardano/cardano-helpers";
-import { buildUnlockTx } from "../../../lib/cardano/unlock-assets/unlock-assets";
+import { useUnlockAssetsMutation } from "../mutations/use-unlock-assets-mutation";
 
 export const UnlockCard = (props: {
   onComplete: (transactionDetails: TransactionDetails) => void;
@@ -19,52 +17,44 @@ export const UnlockCard = (props: {
   const { connected, wallet, name: walletName } = useWallet();
   const { toast } = useToast();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const unlockAssetsMutation = useUnlockAssetsMutation({
+    onSuccess: (data) => {
+      props.onComplete({
+        txHash: data.submittedTxHash,
+        action: "Unlock Funds",
+        amount:
+          data.utxo.output.amount
+            .filter((asset) => asset.unit === "lovelace")
+            .reduce((sum, asset) => sum + parseInt(asset.quantity), 0) /
+          1000000,
+      });
+    },
+    onError: (error) => {
+      if (error.message === "Transaction not found") {
+        toast({
+          title: "Transaction not found",
+          description: "Please check the transaction hash and try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Transaction failed",
+          description: getErrorMessage(error, walletName),
+          variant: "destructive",
+        });
+      }
+    },
+  });
 
   const form = useForm({
     defaultValues: {
       txHash: "",
     },
     onSubmit: async ({ value }) => {
-      if (isLoading) return;
-
-      try {
-        setIsLoading(true);
-
-        const utxo = await getUtxoByTxHash(value.txHash);
-        if (!utxo) {
-          toast({
-            title: "Transaction not found",
-            description: "Please check the transaction hash and try again.",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        const unsignedTx = await buildUnlockTx(utxo, wallet);
-
-        const signedTx = await wallet.signTx(unsignedTx, true);
-        const submittedTxHash = await wallet.submitTx(signedTx);
-
-        props.onComplete({
-          txHash: submittedTxHash,
-          action: "Unlock Funds",
-          amount:
-            utxo.output.amount
-              .filter((asset) => asset.unit === "lovelace")
-              .reduce((sum, asset) => sum + parseInt(asset.quantity), 0) /
-            1000000,
-        });
-      } catch (error: any) {
-        toast({
-          title: "Transaction failed",
-          description: getErrorMessage(error, walletName),
-          variant: "destructive",
-        });
-        console.error("Unlock error:", error);
-      } finally {
-        setIsLoading(false);
-      }
+      await unlockAssetsMutation.mutateAsync({
+        txHash: value.txHash,
+        wallet,
+      });
     },
   });
 
@@ -98,7 +88,7 @@ export const UnlockCard = (props: {
                     name={field.name}
                     placeholder="Enter the transaction hash here..."
                     field={field}
-                    disabled={isLoading}
+                    disabled={unlockAssetsMutation.isPending}
                     autoComplete="off"
                   />
                 );
@@ -117,7 +107,7 @@ export const UnlockCard = (props: {
                   {connected ? (
                     <ActionButton
                       type="submit"
-                      isLoading={isLoading || isSubmitting}
+                      isLoading={unlockAssetsMutation.isPending || isSubmitting}
                       disabled={!canSubmit}
                       variant="primary"
                     >
