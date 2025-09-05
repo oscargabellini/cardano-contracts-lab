@@ -13,7 +13,7 @@ import {
   getWalletInfoForTx,
 } from "../cardano-helpers";
 
-export async function buildUnlockTx(
+export async function buildUnlockTxWithPassword(
   scriptUtxo: UTxO,
   connectedWallet: IWallet,
   password: string

@@ -7,7 +7,7 @@ import {
   getWalletInfoForTx,
 } from "../cardano-helpers";
 
-export async function lockAsset(
+export async function lockAssetsWithPassword(
   connectedWallet: IWallet,
   assets: Asset[],
   password: string

@@ -1,6 +1,5 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
-import { useState } from "react";
 import { TransactionDetails } from "../../../components/features/transaction-details";
 import { ActionButton } from "../../../components/ui/action-button";
 import { AlertBox } from "../../../components/ui/alert-box";
@@ -9,7 +8,7 @@ import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet/wallet";
-import { lockAsset } from "../../../lib/cardano/unlock-with-password/lock-assets";
+import { useLockAssetsWithPasswordMutation } from "../mutations/use-lock-assets-with-password-mutation";
 
 type LockWithPasswordCardProps = {
   onComplete: (transactionDetails: TransactionDetails) => void;
@@ -20,7 +19,23 @@ export const LockWithPasswordCard = (props: LockWithPasswordCardProps) => {
   const { connected, wallet } = useWallet();
   const { toast } = useToast();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const lockAssetsWithPasswordMutation = useLockAssetsWithPasswordMutation({
+    onSuccess: (data, variables) => {
+      props.onComplete({
+        txHash: data,
+        action: "Lock Funds with Password",
+        amount: variables.amount,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Transaction failed",
+        description: error.info || error.message,
+        variant: "destructive",
+      });
+      console.error(error);
+    },
+  });
 
   const form = useForm({
     defaultValues: {
@@ -28,30 +43,11 @@ export const LockWithPasswordCard = (props: LockWithPasswordCardProps) => {
       password: "",
     },
     onSubmit: async ({ value }) => {
-      try {
-        setIsLoading(true);
-
-        const txHash = await lockAsset(
-          wallet,
-          [{ unit: "lovelace", quantity: String(+value.amount * 1000000) }],
-          value.password
-        );
-
-        props.onComplete({
-          txHash,
-          action: "Lock Funds with Password",
-          amount: +value.amount,
-        });
-      } catch (error: any) {
-        toast({
-          title: "Transaction failed",
-          description: error.info || error.message,
-          variant: "destructive",
-        });
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
+      lockAssetsWithPasswordMutation.mutateAsync({
+        wallet,
+        amount: +value.amount,
+        password: value.password,
+      });
     },
   });
 
@@ -89,7 +85,7 @@ export const LockWithPasswordCard = (props: LockWithPasswordCardProps) => {
                     type="number"
                     placeholder="Enter the amount here"
                     field={field}
-                    disabled={isLoading}
+                    disabled={lockAssetsWithPasswordMutation.isPending}
                     autoComplete="off"
                   />
                 );
@@ -128,7 +124,9 @@ export const LockWithPasswordCard = (props: LockWithPasswordCardProps) => {
                   {connected ? (
                     <ActionButton
                       type="submit"
-                      isLoading={isLoading || isSubmitting}
+                      isLoading={
+                        lockAssetsWithPasswordMutation.isPending || isSubmitting
+                      }
                       disabled={!canSubmit}
                       variant="primary"
                     >

@@ -1,16 +1,14 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
-import { useState } from "react";
 import { TransactionDetails } from "../../../components/features/transaction-details";
 import { ActionButton } from "../../../components/ui/action-button";
 import { AlertBox } from "../../../components/ui/alert-box";
 import { Button } from "../../../components/ui/button";
 import { InputField } from "../../../components/ui/input/input-field";
-import { toast } from "../../../components/ui/toast";
+import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
 import { WalletButton } from "../../../components/ui/wallet/wallet";
-import { getUtxoByTxHash } from "../../../lib/cardano/cardano-helpers";
-import { buildUnlockTx } from "../../../lib/cardano/unlock-with-password/unlock-assets";
+import { useUnlockAssetsWithPasswordMutation } from "../mutations/use-unlock-assets-with-password-mutation";
 
 type UnlockWithPasswordCardProps = {
   onComplete: (transactionDetails: TransactionDetails) => void;
@@ -19,8 +17,27 @@ type UnlockWithPasswordCardProps = {
 
 export const UnlockWithPasswordCard = (props: UnlockWithPasswordCardProps) => {
   const { connected, wallet, name: walletName } = useWallet();
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { toast } = useToast();
+  const unlockAssetsWithPasswordMutation = useUnlockAssetsWithPasswordMutation({
+    onSuccess: (data) => {
+      props.onComplete({
+        txHash: data.submittedTxHash,
+        action: "Unlock Funds with Password",
+        amount:
+          data.utxo.output.amount
+            .filter((asset) => asset.unit === "lovelace")
+            .reduce((sum, asset) => sum + parseInt(asset.quantity), 0) /
+          1000000,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Transaction failed",
+        description: getErrorMessage(error, walletName),
+        variant: "destructive",
+      });
+    },
+  });
 
   const form = useForm({
     defaultValues: {
@@ -28,45 +45,11 @@ export const UnlockWithPasswordCard = (props: UnlockWithPasswordCardProps) => {
       password: "",
     },
     onSubmit: async ({ value }) => {
-      if (isLoading) return;
-
-      try {
-        setIsLoading(true);
-
-        const utxo = await getUtxoByTxHash(value.txHash);
-        if (!utxo) {
-          toast({
-            title: "Transaction not found",
-            description: "Please check the transaction hash and try again.",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        const unsignedTx = await buildUnlockTx(utxo, wallet, value.password);
-
-        const signedTx = await wallet.signTx(unsignedTx, true);
-        const submittedTxHash = await wallet.submitTx(signedTx);
-
-        props.onComplete({
-          txHash: submittedTxHash,
-          action: "Unlock Funds with Password",
-          amount:
-            utxo.output.amount
-              .filter((asset) => asset.unit === "lovelace")
-              .reduce((sum, asset) => sum + parseInt(asset.quantity), 0) /
-            1000000,
-        });
-      } catch (error: any) {
-        toast({
-          title: "Transaction failed",
-          description: getErrorMessage(error, walletName),
-          variant: "destructive",
-        });
-        console.error("Unlock error:", JSON.stringify(error, null, 2));
-      } finally {
-        setIsLoading(false);
-      }
+      unlockAssetsWithPasswordMutation.mutateAsync({
+        wallet,
+        txHash: value.txHash,
+        password: value.password,
+      });
     },
   });
 
@@ -100,7 +83,7 @@ export const UnlockWithPasswordCard = (props: UnlockWithPasswordCardProps) => {
                     name={field.name}
                     placeholder="Enter the transaction hash here..."
                     field={field}
-                    disabled={isLoading}
+                    disabled={unlockAssetsWithPasswordMutation.isPending}
                     autoComplete="off"
                   />
                 );
@@ -121,7 +104,7 @@ export const UnlockWithPasswordCard = (props: UnlockWithPasswordCardProps) => {
                     name={field.name}
                     placeholder="Enter the password to unlock the funds"
                     field={field}
-                    disabled={isLoading}
+                    disabled={unlockAssetsWithPasswordMutation.isPending}
                     autoComplete="off"
                   />
                 );
@@ -140,7 +123,10 @@ export const UnlockWithPasswordCard = (props: UnlockWithPasswordCardProps) => {
                   {connected ? (
                     <ActionButton
                       type="submit"
-                      isLoading={isLoading || isSubmitting}
+                      isLoading={
+                        unlockAssetsWithPasswordMutation.isPending ||
+                        isSubmitting
+                      }
                       disabled={!canSubmit}
                       variant="primary"
                     >
