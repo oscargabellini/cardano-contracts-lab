@@ -1,4 +1,4 @@
-name = "aiken-lang/unlock-with-custom-message"
+name = "aiken-lang/unlock_with_password"
 version = "0.0.0"
 compiler = "v1.1.7"
 plutus = "v3"

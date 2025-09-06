@@ -81,13 +81,3 @@ test test_failed_unlock_without_signer() {
   let tx = mock_tx(False)
   !unlock_with_password.spend(datum, redeemer, mock_utxo_ref(0, 0), tx)
 }
-
-test debug_hash_comparison() {
-  let password = "Ciccione"
-  let password_bytes = password
-  let hash1 = hash_password(password_bytes)
-  let hash2 = hash_password(password_bytes)
-  trace hash1
-  trace hash2
-  True
-}
