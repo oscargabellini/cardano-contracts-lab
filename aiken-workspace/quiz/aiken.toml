@@ -1,9 +1,9 @@
-name = "aiken-lang/quiz"
+name = "oscargabellini/quiz"
 version = "0.0.0"
 compiler = "v1.1.7"
 plutus = "v3"
 license = "Apache-2.0"
-description = "Aiken contracts for project 'aiken-lang/cardano-contracts-lab'"
+description = "Aiken contracts for project 'oscargabellini/cardano-contracts-lab'"
 
 [repository]
 user = "oscar"
