@@ -1,4 +1,4 @@
-name = "oscargabellini/unlock_with_password"
+name = "oscargabellini/vesting"
 version = "0.0.0"
 compiler = "v1.1.7"
 plutus = "v3"
@@ -12,7 +12,7 @@ platform = "github"
 
 [[dependencies]]
 name = "aiken-lang/stdlib"
-version = "v2"
+version = "v2.2.0"
 source = "github"
 
 [[dependencies]]

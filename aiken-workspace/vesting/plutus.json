@@ -1,0 +1,79 @@
+{
+  "preamble": {
+    "title": "oscargabellini/vesting",
+    "description": "Aiken contracts for project 'oscargabellini/cardano-contracts-lab'",
+    "version": "0.0.0",
+    "plutusVersion": "v3",
+    "compiler": {
+      "name": "Aiken",
+      "version": "v1.1.7+e2fb28b"
+    },
+    "license": "Apache-2.0"
+  },
+  "validators": [
+    {
+      "title": "vesting.vesting.spend",
+      "datum": {
+        "title": "datum",
+        "schema": {
+          "$ref": "#/definitions/vesting~1Datum"
+        }
+      },
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "compiledCode": "59017f01010032323232323232253330023232323232533233008300130093754004264664464a66601866e1d2000300d375400426464a66601c6644646600200200644a66602a00229404cc894ccc050cdc78010028a51133004004001375c602e00260300026eb0c04cc050c050c050c050c050c050c050c050c040dd50051bae30013010375400426644646464a666026601860286ea800454ccc04cc030c050dd5180c180c801099b88004375a6030602a6ea80044cdc48021bad3018301537540022940c05c004cc054c058004cc054ccc044c028c048dd5180b180b800a60103d87a80004c0103d87980004bd7018091baa3003301237540046026602860286028602860286028602860206ea8028dd69809980a18081baa00214a0460260026022601c6ea8008594ccc02ccdc3a400060186ea801854ccc038c034dd50030a4c2c2c601c002601c601e00260146ea8008dc3a40042c6016601800660140046012004601200260086ea8004526136565734aae7555cf2ab9f5740ae855d101",
+      "hash": "f113945b36f5d4fc01031968d7a282b61bd8672b42eaac46f5cde640"
+    },
+    {
+      "title": "vesting.vesting.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "59017f01010032323232323232253330023232323232533233008300130093754004264664464a66601866e1d2000300d375400426464a66601c6644646600200200644a66602a00229404cc894ccc050cdc78010028a51133004004001375c602e00260300026eb0c04cc050c050c050c050c050c050c050c050c040dd50051bae30013010375400426644646464a666026601860286ea800454ccc04cc030c050dd5180c180c801099b88004375a6030602a6ea80044cdc48021bad3018301537540022940c05c004cc054c058004cc054ccc044c028c048dd5180b180b800a60103d87a80004c0103d87980004bd7018091baa3003301237540046026602860286028602860286028602860206ea8028dd69809980a18081baa00214a0460260026022601c6ea8008594ccc02ccdc3a400060186ea801854ccc038c034dd50030a4c2c2c601c002601c601e00260146ea8008dc3a40042c6016601800660140046012004601200260086ea8004526136565734aae7555cf2ab9f5740ae855d101",
+      "hash": "f113945b36f5d4fc01031968d7a282b61bd8672b42eaac46f5cde640"
+    }
+  ],
+  "definitions": {
+    "Int": {
+      "dataType": "integer"
+    },
+    "VerificationKeyHash": {
+      "title": "VerificationKeyHash",
+      "dataType": "bytes"
+    },
+    "Void": {
+      "title": "Unit",
+      "anyOf": [
+        {
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        }
+      ]
+    },
+    "vesting/Datum": {
+      "title": "Datum",
+      "anyOf": [
+        {
+          "title": "Datum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "beneficiary",
+              "$ref": "#/definitions/VerificationKeyHash"
+            },
+            {
+              "title": "unlock_time",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
