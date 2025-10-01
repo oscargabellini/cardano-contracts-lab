@@ -1,11 +1,9 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
-import { ActionButton } from "../../../components/ui/action-button";
-import { Button } from "../../../components/ui/button";
+import { FormButtons } from "../../../components/ui/form-buttons";
 import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
-import { WalletButton } from "../../../components/ui/wallet/wallet";
 import { useSubmitAnswerMutation } from "../../../lib/mutations/use-submit-answer-mutation";
 
 export type AnswerDetails = {
@@ -23,7 +21,7 @@ type AnswerCardProps = {
 };
 
 export const AnswerQuizForm = (props: AnswerCardProps) => {
-  const { connected, wallet } = useWallet();
+  const { wallet } = useWallet();
   const { toast } = useToast();
 
   const submitAnswerMutation = useSubmitAnswerMutation({
@@ -86,23 +84,13 @@ export const AnswerQuizForm = (props: AnswerCardProps) => {
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
-            <div className="flex flex-col-reverse md:flex-row gap-4 pt-2 w-full mt-4 justify-end">
-              <Button variant="secondary" onClick={props.onClose}>
-                Close
-              </Button>
-              {connected ? (
-                <ActionButton
-                  type="submit"
-                  isLoading={submitAnswerMutation.isPending || isSubmitting}
-                  disabled={!canSubmit}
-                  variant="primary"
-                >
-                  Answer
-                </ActionButton>
-              ) : (
-                <WalletButton />
-              )}
-            </div>
+            <FormButtons
+              onClose={props.onClose}
+              canSubmit={canSubmit}
+              disabled={submitAnswerMutation.isPending}
+              isLoading={isSubmitting || submitAnswerMutation.isPending}
+              primaryButtonChildren="Answer"
+            />
           )}
         />
       </form>

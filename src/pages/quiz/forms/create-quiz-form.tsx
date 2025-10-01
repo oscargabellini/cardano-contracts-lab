@@ -1,11 +1,9 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
-import { ActionButton } from "../../../components/ui/action-button";
-import { Button } from "../../../components/ui/button";
+import { FormButtons } from "../../../components/ui/form-buttons";
 import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
-import { WalletButton } from "../../../components/ui/wallet/wallet";
 import { useCreateQuizMutation } from "../../../lib/mutations/use-create-quiz-mutation";
 import { QuizTransactionDetails } from "../quiz.page";
 
@@ -15,7 +13,7 @@ type CreateQuizFormProps = {
 };
 
 export const CreateQuizForm = (props: CreateQuizFormProps) => {
-  const { connected, wallet } = useWallet();
+  const { wallet } = useWallet();
   const { toast } = useToast();
 
   const createQuizMutation = useCreateQuizMutation({
@@ -121,23 +119,13 @@ export const CreateQuizForm = (props: CreateQuizFormProps) => {
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
             children={([canSubmit, isSubmitting]) => (
-              <div className="flex flex-col-reverse md:flex-row gap-4 pt-2 w-full mt-4 justify-end">
-                <Button variant="secondary" onClick={props.onClose}>
-                  Close
-                </Button>
-                {connected ? (
-                  <ActionButton
-                    type="submit"
-                    isLoading={isSubmitting || createQuizMutation.isPending}
-                    disabled={!canSubmit}
-                    variant="primary"
-                  >
-                    Create Quiz
-                  </ActionButton>
-                ) : (
-                  <WalletButton />
-                )}
-              </div>
+              <FormButtons
+                onClose={props.onClose}
+                canSubmit={canSubmit}
+                disabled={createQuizMutation.isPending}
+                isLoading={isSubmitting || createQuizMutation.isPending}
+                primaryButtonChildren="Create Quiz"
+              />
             )}
           />
         </div>

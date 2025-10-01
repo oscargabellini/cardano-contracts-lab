@@ -1,20 +1,18 @@
 import { useWallet } from "@meshsdk/react";
 import { useForm } from "@tanstack/react-form";
 import { TransactionDetails } from "../../../components/features/transaction-details";
-import { ActionButton } from "../../../components/ui/action-button";
 import { AlertBox } from "../../../components/ui/alert-box";
-import { Button } from "../../../components/ui/button";
+import { FormButtons } from "../../../components/ui/form-buttons";
 import { InputField } from "../../../components/ui/input/input-field";
 import { useToast } from "../../../components/ui/toast";
 import { TransactionCard } from "../../../components/ui/transaction-card";
-import { WalletButton } from "../../../components/ui/wallet/wallet";
 import { useLockAssetsMutation } from "../../../lib/mutations/use-lock-assets-mutation";
 
 export const LockCard = (props: {
   onComplete: (transactionDetails: TransactionDetails) => void;
   onClose?: () => void;
 }) => {
-  const { connected, wallet } = useWallet();
+  const { wallet } = useWallet();
   const { toast } = useToast();
 
   const lockAssetsMutation = useLockAssetsMutation({
@@ -89,25 +87,13 @@ export const LockCard = (props: {
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
               children={([canSubmit, isSubmitting]) => (
-                <div className="flex flex-col-reverse md:flex-row gap-4 pt-2 w-full mt-4 justify-end">
-                  {props.onClose && (
-                    <Button variant="secondary" onClick={props.onClose}>
-                      Close
-                    </Button>
-                  )}
-                  {connected ? (
-                    <ActionButton
-                      type="submit"
-                      isLoading={lockAssetsMutation.isPending || isSubmitting}
-                      disabled={!canSubmit}
-                      variant="primary"
-                    >
-                      Lock Funds
-                    </ActionButton>
-                  ) : (
-                    <WalletButton />
-                  )}
-                </div>
+                <FormButtons
+                  onClose={props.onClose}
+                  canSubmit={canSubmit}
+                  disabled={lockAssetsMutation.isPending}
+                  isLoading={isSubmitting || lockAssetsMutation.isPending}
+                  primaryButtonChildren="Lock Funds"
+                />
               )}
             />
           </div>
