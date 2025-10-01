@@ -8,9 +8,11 @@
   font-weight: 500 !important;
   height: 2.25rem !important;
   padding: 0.5rem 1rem !important;
+  width: 100% !important;
   background-color: hsl(var(--primary)) !important;
   color: hsl(var(--primary-foreground)) !important;
   transition: opacity 300ms ease-in-out !important;
+  border-radius: 12px !important;
 }
 
 .custom-wallet-wrapper .mesh-inline-flex:hover {
