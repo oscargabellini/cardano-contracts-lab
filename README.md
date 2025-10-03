@@ -6,9 +6,10 @@ A web application for experimenting with smart contracts on the Cardano blockcha
 
 The application includes the following smart contracts:
 
-1. **Basic Lock/Unlock**: Simple contract to lock and unlock funds
-2. **Unlock With Password**: Contract that requires a password to unlock funds
-3. **Quiz Contract**: Smart contract that handles questions and rewards for correct answers
+1. **Basic Lock/Unlock**: Simple contract to lock and unlock funds.
+2. **Unlock With Password**: Contract that requires a password to unlock funds.
+3. **Quiz Contract**: Smart contract that handles questions and rewards for correct answers.
+4. **Vesting**: Smart contract that blocks funds that can be unlocked from the release date onwards.
 
 All contracts are built using Aiken, a language designed for Cardano smart contracts.
 
