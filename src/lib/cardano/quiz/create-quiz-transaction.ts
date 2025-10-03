@@ -7,6 +7,15 @@ import {
   getWalletInfoForTx,
 } from "../cardano-helpers";
 
+/**
+ * Create quiz transaction
+ * @param connectedWallet - The connected wallet
+ * @param question - The question
+ * @param answer - The answer
+ * @param assets - The assets
+ * @returns The transaction hash
+ */
+
 export async function createQuizTransaction(
   connectedWallet: any,
   question: string,
@@ -30,5 +39,6 @@ export async function createQuizTransaction(
 
   const signedTx = await connectedWallet.signTx(txBuilder.txHex);
   const txHash = await connectedWallet.submitTx(signedTx);
+
   return txHash;
 }

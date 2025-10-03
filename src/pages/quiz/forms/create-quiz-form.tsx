@@ -19,7 +19,7 @@ export const CreateQuizForm = (props: CreateQuizFormProps) => {
   const createQuizMutation = useCreateQuizMutation({
     onSuccess: (data, variables) => {
       props.onComplete({
-        txHash: data,
+        txHash: data.submittedTxHash,
         question: variables.question,
         answer: variables.answer,
         amount: variables.prize,

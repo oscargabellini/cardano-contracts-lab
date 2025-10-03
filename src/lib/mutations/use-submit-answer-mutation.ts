@@ -16,13 +16,11 @@ async function mutationFn(variables: CreateMutationVariables) {
     throw new Error("Transaction not found");
   }
 
-  const buildAnswerTx = await submitAnswerTransaction(
+  const submittedTxHash = await submitAnswerTransaction(
     utxo,
     variables.wallet,
     variables.answer
   );
-  const signedTx = await variables.wallet.signTx(buildAnswerTx, true);
-  const submittedTxHash = await variables.wallet.submitTx(signedTx);
   return { submittedTxHash, utxo };
 }
 

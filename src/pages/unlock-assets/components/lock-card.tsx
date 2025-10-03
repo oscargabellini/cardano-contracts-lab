@@ -18,7 +18,7 @@ export const LockCard = (props: {
   const lockAssetsMutation = useLockAssetsMutation({
     onSuccess: (data, variables) => {
       props.onComplete({
-        txHash: data,
+        txHash: data.submittedTxHash,
         action: "Lock Funds",
         amount: variables.amount,
       });

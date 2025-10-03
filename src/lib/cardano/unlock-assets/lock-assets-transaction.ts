@@ -6,6 +6,12 @@ import {
   getWalletInfoForTx,
 } from "../cardano-helpers";
 
+/**
+ * Lock assets transaction
+ * @param connectedWallet - The connected wallet
+ * @param assets - The assets to lock
+ * @returns The transaction hash
+ */
 export async function lockAssetTransaction(
   connectedWallet: any,
   assets: Asset[]
@@ -25,5 +31,6 @@ export async function lockAssetTransaction(
 
   const signedTx = await connectedWallet.signTx(txBuilder.txHex);
   const txHash = await connectedWallet.submitTx(signedTx);
+
   return txHash;
 }

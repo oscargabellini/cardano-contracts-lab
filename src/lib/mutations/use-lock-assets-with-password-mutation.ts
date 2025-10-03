@@ -10,12 +10,12 @@ type CreateMutationVariables = {
 };
 
 async function mutationFn(variables: CreateMutationVariables) {
-  const txHash = await lockAssetsWithPasswordTransaction(
+  const submittedTxHash = await lockAssetsWithPasswordTransaction(
     variables.wallet,
     [{ unit: "lovelace", quantity: String(+variables.amount * 1000000) }],
     variables.password
   );
-  return txHash;
+  return { submittedTxHash };
 }
 
 export const useLockAssetsWithPasswordMutation = (

@@ -18,7 +18,7 @@ async function mutationFn(variables: CreateMutationVariables) {
     [{ unit: "lovelace", quantity: String(+variables.prize * 1000000) }]
   );
 
-  return submittedTxHash;
+  return { submittedTxHash };
 }
 
 export const useCreateQuizMutation = (

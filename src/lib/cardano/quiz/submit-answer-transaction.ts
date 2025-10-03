@@ -6,6 +6,14 @@ import {
   getWalletInfoForTx,
 } from "../cardano-helpers";
 
+/**
+ * Submit answer transaction
+ * @param scriptUtxo - The script utxo
+ * @param connectedWallet - The connected wallet
+ * @param answer - The answer to submit
+ * @returns The transaction hash
+ */
+
 export async function submitAnswerTransaction(
   scriptUtxo: UTxO,
   connectedWallet: IWallet,
@@ -42,5 +50,8 @@ export async function submitAnswerTransaction(
     .selectUtxosFrom(utxos)
     .complete();
 
-  return txBuilder.txHex;
+  const signedTx = await connectedWallet.signTx(txBuilder.txHex, true);
+  const txHash = await connectedWallet.submitTx(signedTx);
+
+  return txHash;
 }

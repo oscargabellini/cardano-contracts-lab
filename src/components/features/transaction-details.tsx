@@ -10,7 +10,9 @@ export type TransactionDetails = {
     | "Lock Funds"
     | "Unlock Funds"
     | "Lock Funds with Password"
-    | "Unlock Funds with Password";
+    | "Unlock Funds with Password"
+    | "Vest Funds"
+    | "Unvest Funds";
   amount: number;
 };
 

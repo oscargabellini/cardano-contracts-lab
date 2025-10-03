@@ -15,9 +15,7 @@ async function mutationFn(variables: UnlockMutationVariables) {
     throw new Error("Transaction not found");
   }
 
-  const unsignedTx = await unlockAssetTransaction(utxo, variables.wallet);
-  const signedTx = await variables.wallet.signTx(unsignedTx, true);
-  const submittedTxHash = await variables.wallet.submitTx(signedTx);
+  const submittedTxHash = await unlockAssetTransaction(utxo, variables.wallet);
 
   return { submittedTxHash, utxo };
 }

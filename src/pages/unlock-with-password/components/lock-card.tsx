@@ -20,7 +20,7 @@ export const LockWithPasswordCard = (props: LockWithPasswordCardProps) => {
   const lockAssetsWithPasswordMutation = useLockAssetsWithPasswordMutation({
     onSuccess: (data, variables) => {
       props.onComplete({
-        txHash: data,
+        txHash: data.submittedTxHash,
         action: "Lock Funds with Password",
         amount: variables.amount,
       });

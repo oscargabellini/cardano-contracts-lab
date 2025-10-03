@@ -13,6 +13,14 @@ import {
   getWalletInfoForTx,
 } from "../cardano-helpers";
 
+/**
+ * Unlock assets with password transaction
+ * @param scriptUtxo - The script utxo
+ * @param connectedWallet - The connected wallet
+ * @param password - The password to unlock the assets
+ * @returns The transaction hash
+ */
+
 export async function unlockAssetsWithPasswordTransaction(
   scriptUtxo: UTxO,
   connectedWallet: IWallet,
@@ -49,5 +57,8 @@ export async function unlockAssetsWithPasswordTransaction(
     .selectUtxosFrom(utxos)
     .complete();
 
-  return txBuilder.txHex;
+  const signedTx = await connectedWallet.signTx(txBuilder.txHex, true);
+  const txHash = await connectedWallet.submitTx(signedTx);
+
+  return txHash;
 }
