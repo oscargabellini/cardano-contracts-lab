@@ -1,4 +1,4 @@
-import { FileQuestionIcon, KeyIcon, LockIcon } from "lucide-react";
+import { ClockIcon, FileQuestionIcon, KeyIcon, LockIcon } from "lucide-react";
 
 export type ContractOption = {
   title: string;
@@ -28,5 +28,12 @@ export const contractOptions: ContractOption[] = [
       "A smart contract that enables on-chain quiz games where users can lock ADA as prizes, create questions with hashed answers, and reward correct submissions with the locked funds.",
     navigateTo: "/quiz",
     icon: <FileQuestionIcon className="w-10 h-10 text-primary" />,
+  },
+  {
+    title: "Vest Funds",
+    description:
+      "When you vest funds, the funds are stored securely in the smart contract. You will receive a unique Transaction ID that you can use to unvest your funds when the the date is reached.",
+    navigateTo: "/vesting",
+    icon: <ClockIcon className="w-10 h-10 text-primary" />,
   },
 ];

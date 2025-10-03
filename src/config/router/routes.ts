@@ -8,6 +8,7 @@ import { HomePage } from "../../pages/home";
 import { QuizPage } from "../../pages/quiz/quiz.page";
 import { UnlockFundsPage } from "../../pages/unlock-assets/unlock-funds.page";
 import { UnlockWithPasswordPage } from "../../pages/unlock-with-password/unlock-with-password.page";
+import { VestingPage } from "../../pages/vesting/vesting.page";
 
 const rootRoute = createRootRoute({
   component: RootLayout,
@@ -37,11 +38,18 @@ const quizRoute = createRoute({
   component: QuizPage,
 });
 
+const vestingRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/vesting",
+  component: VestingPage,
+});
+
 const routeTree = rootRoute.addChildren([
   homeRoute,
   unlockFundsRoute,
   unlockWithPasswordRoute,
   quizRoute,
+  vestingRoute,
 ]);
 
 export const router = createRouter({ routeTree });
